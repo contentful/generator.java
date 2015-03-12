@@ -19,10 +19,13 @@ public class Main {
           && line.hasOption("folder")
           && line.hasOption("token")) {
 
-        new Generator().generate(line.getOptionValue("space"), line.getOptionValue("token"),
-            line.getOptionValue("package"), line.getOptionValue("folder"));
+        new Generator().generate(
+            line.getOptionValue("space"),
+            line.getOptionValue("token"),
+            line.getOptionValue("package"),
+            line.getOptionValue("folder"));
       } else {
-        usage(args[0], options);
+        usage(options);
       }
     } catch (ParseException e) {
       System.err.println("Parsing failed, reason: " + e.getMessage());
@@ -37,7 +40,7 @@ public class Main {
         .addOption("f", "folder", true, "Destination folder path");
   }
 
-  public static void usage(String cmd, Options options) {
-    new HelpFormatter().printHelp(cmd, options);
+  public static void usage(Options options) {
+    new HelpFormatter().printHelp("generator.java", options);
   }
 }
