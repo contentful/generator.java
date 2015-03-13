@@ -1,11 +1,11 @@
 package com.contentful.generator;
 
+import com.contentful.java.cda.model.CDAAsset;
+import com.contentful.java.cda.model.CDAEntry;
 import com.contentful.java.cma.CMAClient;
 import com.contentful.java.cma.Constants;
 import com.contentful.java.cma.model.CMAArray;
-import com.contentful.java.cma.model.CMAAsset;
 import com.contentful.java.cma.model.CMAContentType;
-import com.contentful.java.cma.model.CMAEntry;
 import com.contentful.java.cma.model.CMAField;
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.ClassName;
@@ -14,6 +14,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -50,14 +51,14 @@ public class Generator {
           continue;
         }
 
-        generateModel(pkg, contentType);
+        generateModel(pkg, path, contentType);
       }
     } catch (RetrofitError e) {
       System.out.println("Failed to fetch content types, reason: " + e.getMessage());
     }
   }
 
-  private void generateModel(String pkg, CMAContentType contentType) {
+  private void generateModel(String pkg, String path, CMAContentType contentType) {
     String className = models.get(contentType.getResourceId());
 
     TypeSpec.Builder builder = TypeSpec.classBuilder(className)
@@ -78,7 +79,7 @@ public class Generator {
         .build();
 
     try {
-      javaFile.writeTo(System.out);
+      javaFile.writeTo(new File(path));
     } catch (IOException e) {
       System.out.println("Failed to write model for "
           + "\"" + contentType.getName() + "\", reason: " + e.getMessage());
@@ -107,7 +108,7 @@ public class Generator {
       String linkType = (String) arrayItems.get("linkType");
       if ("Asset".equals(linkType)) {
         return FieldSpec.builder(
-            parameterizedList(CMAAsset.class),
+            parameterizedList(CDAAsset.class),
             fieldName,
             Modifier.PRIVATE).build();
       } else if ("Entry".equals(linkType)) {
@@ -117,7 +118,7 @@ public class Generator {
 
         if (linkContentType == null) {
           return FieldSpec.builder(
-              parameterizedList(CMAEntry.class),
+              parameterizedList(CDAEntry.class),
               fieldName,
               Modifier.PRIVATE).build();
         } else {
@@ -145,11 +146,11 @@ public class Generator {
     ClassName className = null;
 
     if ("Asset".equals(linkType)) {
-      clazz = CMAAsset.class;
+      clazz = CDAAsset.class;
     } else if ("Entry".equals(linkType)) {
       String linkContentType = extractSingleLinkContentType(validations);
       if (linkContentType == null) {
-        clazz = CMAEntry.class;
+        clazz = CDAEntry.class;
       } else {
         className = ClassName.get(pkg, models.get(linkContentType));
       }
