@@ -29,11 +29,7 @@ public class Generator {
     models = new HashMap<String, String>();
   }
 
-  public void generate(String spaceId, String token, String pkg, String path) {
-    CMAClient client = new CMAClient.Builder()
-        .setAccessToken(token)
-        .build();
-
+  public void generate(String spaceId, String pkg, String path, CMAClient client) {
     try {
       CMAArray<CMAContentType> contentTypes = client.contentTypes().fetchAll(spaceId);
 
@@ -50,7 +46,9 @@ public class Generator {
               + "), has no name.");
           continue;
         }
-        generateModel(pkg, path, contentType);
+
+        JavaFile javaFile = generateModel(pkg, contentType, models.get(contentType.getResourceId()));
+        javaFile.writeTo(new File(path));
       }
     } catch (RetrofitError e) {
       System.out.println("Failed to fetch content types, reason: " + e.getMessage());
@@ -69,9 +67,16 @@ public class Generator {
     }
   }
 
-  private void generateModel(String pkg, String path, CMAContentType contentType) throws Exception {
-    String className = models.get(contentType.getResourceId());
+  public void generate(String spaceId, String pkg, String path, String token) {
+    CMAClient client = new CMAClient.Builder()
+        .setAccessToken(token)
+        .build();
 
+    generate(spaceId, pkg, path, client);
+  }
+
+  JavaFile generateModel(String pkg, CMAContentType contentType, String className)
+      throws Exception {
     TypeSpec.Builder builder = TypeSpec.classBuilder(className)
         .addModifiers(Modifier.PUBLIC)
         .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
@@ -81,44 +86,18 @@ public class Generator {
         continue;
       }
 
-      try {
-        String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
-        FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName);
+      String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
+      FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName);
 
-        builder.addField(fieldSpec)
-            .addMethod(fieldGetter(fieldSpec))
-            .addMethod(fieldSetter(fieldSpec));
-
-        JavaFile javaFile = JavaFile.builder(pkg, builder.build()).skipJavaLangImports(true).build();
-
-        javaFile.writeTo(new File(path));
-      } catch (Exception e) {
-        String msg = "Failed to write model for "
-            + "\"" + contentType.getName()
-            + "\", reason: "
-            + e.getMessage();
-
-        throw new Exception(msg, e);
-      }
+      builder.addField(fieldSpec)
+          .addMethod(fieldGetter(fieldSpec))
+          .addMethod(fieldSetter(fieldSpec));
     }
+
+    return JavaFile.builder(pkg, builder.build()).skipJavaLangImports(true).build();
   }
 
-  private FieldSpec createFieldSpec(CMAField field, String pkg, String fieldName) {
-    Constants.CMAFieldType fieldType = field.getType();
-    switch (fieldType) {
-      case Array:
-        return createArrayFieldSpec(field, pkg, fieldName);
-      case Link:
-        return createLinkFieldSpec(field.getLinkType(), field.getValidations(), pkg, fieldName);
-    }
-    return fieldSpecForClass(fieldName, classForFieldType(fieldType));
-  }
-
-  private FieldSpec fieldSpecForClass(String fieldName, Class clazz) {
-    return FieldSpec.builder(clazz, fieldName, Modifier.PRIVATE).build();
-  }
-
-  private FieldSpec createArrayFieldSpec(CMAField field, String pkg, String fieldName) {
+  FieldSpec createArrayFieldSpec(CMAField field, String pkg, String fieldName) {
     HashMap arrayItems = field.getArrayItems();
     if ("Link".equals(arrayItems.get("type"))) {
       String linkType = (String) arrayItems.get("linkType");
@@ -148,15 +127,18 @@ public class Generator {
     return FieldSpec.builder(List.class, fieldName, Modifier.PRIVATE).build();
   }
 
-  private ParameterizedTypeName parameterizedList(Class clazz) {
-    return ParameterizedTypeName.get(List.class, clazz);
+  FieldSpec createFieldSpec(CMAField field, String pkg, String fieldName) {
+    Constants.CMAFieldType fieldType = field.getType();
+    switch (fieldType) {
+      case Array:
+        return createArrayFieldSpec(field, pkg, fieldName);
+      case Link:
+        return createLinkFieldSpec(field.getLinkType(), field.getValidations(), pkg, fieldName);
+    }
+    return fieldSpecForClass(fieldName, classForFieldType(fieldType));
   }
 
-  private ParameterizedTypeName parameterizedList(String pkg, String className) {
-    return ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(pkg, className));
-  }
-
-  private FieldSpec createLinkFieldSpec(String linkType, List<Map> validations, String pkg,
+  FieldSpec createLinkFieldSpec(String linkType, List<Map> validations, String pkg,
       String fieldName) {
     Class clazz = null;
     ClassName className = null;
@@ -182,7 +164,19 @@ public class Generator {
         + "\"" + fieldName + "\"");
   }
 
-  private String extractSingleLinkContentType(List<Map> validations) {
+  static FieldSpec fieldSpecForClass(String fieldName, Class clazz) {
+    return FieldSpec.builder(clazz, fieldName, Modifier.PRIVATE).build();
+  }
+
+  static ParameterizedTypeName parameterizedList(Class clazz) {
+    return ParameterizedTypeName.get(List.class, clazz);
+  }
+
+  static ParameterizedTypeName parameterizedList(String pkg, String className) {
+    return ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(pkg, className));
+  }
+
+  static String extractSingleLinkContentType(List<Map> validations) {
     String result = null;
     if (validations != null) {
       for (Map v : validations) {
@@ -201,7 +195,7 @@ public class Generator {
     return result;
   }
 
-  private Class classForFieldType(Constants.CMAFieldType fieldType) {
+  static Class classForFieldType(Constants.CMAFieldType fieldType) {
     switch (fieldType) {
       case Boolean:
         return Boolean.class;
@@ -224,7 +218,7 @@ public class Generator {
     throw new IllegalArgumentException("Unexpected field type: " + fieldType);
   }
 
-  private MethodSpec fieldSetter(FieldSpec fieldSpec) {
+  static MethodSpec fieldSetter(FieldSpec fieldSpec) {
     String methodName = "set" + normalize(fieldSpec.name, CaseFormat.UPPER_CAMEL);
     return MethodSpec.methodBuilder(methodName)
         .addParameter(fieldSpec.type, fieldSpec.name)
@@ -234,7 +228,7 @@ public class Generator {
         .build();
   }
 
-  private MethodSpec fieldGetter(FieldSpec fieldSpec) {
+  static MethodSpec fieldGetter(FieldSpec fieldSpec) {
     String methodName = "get" + normalize(fieldSpec.name, CaseFormat.UPPER_CAMEL);
     return MethodSpec.methodBuilder(methodName)
         .returns(fieldSpec.type)
@@ -243,7 +237,7 @@ public class Generator {
         .build();
   }
 
-  private String normalize(String name, CaseFormat format) {
+  static String normalize(String name, CaseFormat format) {
     String str = name.replaceAll("[^\\w\\d]", "_")
         .replaceAll("(.+)([A-Z]+)", "$1_$2")
         .toUpperCase();
