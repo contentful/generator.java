@@ -66,6 +66,10 @@ public class Generator {
         .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
 
     for (CMAField field : contentType.getFields()) {
+      if (field.isDisabled()) {
+        continue;
+      }
+
       String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
       FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName);
 
