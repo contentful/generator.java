@@ -8,6 +8,7 @@ import com.contentful.java.cma.model.CMAArray;
 import com.contentful.java.cma.model.CMAContentType;
 import com.contentful.java.cma.model.CMAField;
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Joiner;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -15,7 +16,6 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,15 +50,26 @@ public class Generator {
               + "), has no name.");
           continue;
         }
-
         generateModel(pkg, path, contentType);
       }
     } catch (RetrofitError e) {
       System.out.println("Failed to fetch content types, reason: " + e.getMessage());
+    } catch (Exception e) {
+      // Clean up any generated files
+      String generatedPath = Joiner.on(File.separatorChar).join(
+          path,
+          Joiner.on(File.separatorChar).join(pkg.split("\\.")));
+
+      for (Map.Entry<String, String> item : models.entrySet()) {
+        //noinspection ResultOfMethodCallIgnored
+        new File(generatedPath + File.separator + item.getValue() + ".java").delete();
+      }
+
+      throw new RuntimeException(e);
     }
   }
 
-  private void generateModel(String pkg, String path, CMAContentType contentType) {
+  private void generateModel(String pkg, String path, CMAContentType contentType) throws Exception {
     String className = models.get(contentType.getResourceId());
 
     TypeSpec.Builder builder = TypeSpec.classBuilder(className)
@@ -70,24 +81,25 @@ public class Generator {
         continue;
       }
 
-      String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
-      FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName);
+      try {
+        String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
+        FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName);
 
-      builder.addField(fieldSpec)
-          .addMethod(fieldGetter(fieldSpec))
-          .addMethod(fieldSetter(fieldSpec));
-    }
+        builder.addField(fieldSpec)
+            .addMethod(fieldGetter(fieldSpec))
+            .addMethod(fieldSetter(fieldSpec));
 
-    JavaFile javaFile = JavaFile.builder(pkg, builder.build())
-        .skipJavaLangImports(true)
-        .build();
+        JavaFile javaFile = JavaFile.builder(pkg, builder.build()).skipJavaLangImports(true).build();
 
-    try {
-      javaFile.writeTo(new File(path));
-    } catch (IOException e) {
-      System.out.println("Failed to write model for "
-          + "\"" + contentType.getName() + "\", reason: " + e.getMessage());
-      // TODO cleanup any generated files
+        javaFile.writeTo(new File(path));
+      } catch (Exception e) {
+        String msg = "Failed to write model for "
+            + "\"" + contentType.getName()
+            + "\", reason: "
+            + e.getMessage();
+
+        throw new Exception(msg, e);
+      }
     }
   }
 
