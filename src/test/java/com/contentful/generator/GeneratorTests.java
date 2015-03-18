@@ -6,6 +6,8 @@ import com.contentful.java.cma.model.CMAField;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 
@@ -95,7 +97,7 @@ public class GeneratorTests {
     String generatedSource = new Generator().generateModel(
         "test", contentType, "Potato").toString();
 
-    assertThat(expectedSource).isEqualTo(generatedSource);
+    assertThat(generatedSource).isEqualTo(expectedSource);
   }
 
   @Test public void testLinkAsset() throws Exception {
@@ -112,10 +114,10 @@ public class GeneratorTests {
         "",
         "import com.contentful.java.cda.model.CDAAsset;",
         "",
-        "public class Lettuce {",
+        "public class Onion {",
         "  private CDAAsset linkToAsset;",
         "",
-        "  public Lettuce() {",
+        "  public Onion() {",
         "  }",
         "",
         "  public CDAAsset getLinkToAsset() {",
@@ -129,10 +131,10 @@ public class GeneratorTests {
         "");
 
     String generatedSource = new Generator().generateModel(
-        "test", contentType, "Lettuce")
+        "test", contentType, "Onion")
         .toString();
 
-    assertThat(expectedSource).isEqualTo(generatedSource);
+    assertThat(generatedSource).isEqualTo(expectedSource);
   }
 
   @Test public void testLinkEntry() throws Exception {
@@ -187,31 +189,156 @@ public class GeneratorTests {
     String expectedSource = Joiner.on('\n').join(
         "package test;",
         "",
-        "public class Carrot {",
-        "  private SweetPotato linkToEntry;",
+        "public class Zucchini {",
+        "  private Pumpkin linkToEntry;",
         "",
-        "  public Carrot() {",
+        "  public Zucchini() {",
         "  }",
         "",
-        "  public SweetPotato getLinkToEntry() {",
+        "  public Pumpkin getLinkToEntry() {",
         "    return linkToEntry;",
         "  }",
         "",
-        "  public void setLinkToEntry(SweetPotato linkToEntry) {",
+        "  public void setLinkToEntry(Pumpkin linkToEntry) {",
         "    this.linkToEntry = linkToEntry;",
         "  }",
         "}",
         "");
 
-    CMAContentType linkedContentType = new CMAContentType().setId("abc").setName("SweetPotato")
+    CMAContentType linkedContentType = new CMAContentType().setId("abc").setName("Pumpkin")
         .addField(new CMAField().setId("whatever").setType(CMAFieldType.Text));
 
     Generator generator = new Generator();
-    generator.models.put(linkedContentType.getResourceId(), "SweetPotato");
+    generator.models.put(linkedContentType.getResourceId(), "Pumpkin");
 
-    String generatedSource = generator.generateModel("test", contentType, "Carrot")
+    String generatedSource = generator.generateModel("test", contentType, "Zucchini")
+        .toString();
+
+    assertThat(generatedSource).isEqualTo(expectedSource);
+  }
+
+  @Test public void testAssetsArray() throws Exception {
+    CMAContentType contentType = new CMAContentType();
+
+    HashMap<String, String> map = Maps.newHashMap();
+    map.put("type", CMAFieldType.Link.toString());
+    map.put("linkType", "Asset");
+
+    contentType.addField(new CMAField().setId("array")
+        .setType(CMAFieldType.Array)
+        .setArrayItems(map));
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "import com.contentful.java.cda.model.CDAAsset;",
+        "import java.util.List;",
+        "",
+        "public class Celery {",
+        "  private List<CDAAsset> array;",
+        "",
+        "  public Celery() {",
+        "  }",
+        "",
+        "  public List<CDAAsset> getArray() {",
+        "    return array;",
+        "  }",
+        "",
+        "  public void setArray(List<CDAAsset> array) {",
+        "    this.array = array;",
+        "  }",
+        "}",
+        "");
+
+    String generatedSource = new Generator().generateModel(
+        "test", contentType, "Celery")
         .toString();
 
     assertThat(expectedSource).isEqualTo(generatedSource);
+  }
+
+  @Test public void testEntriesArray() throws Exception {
+    CMAContentType contentType = new CMAContentType();
+
+    HashMap<String, String> map = Maps.newHashMap();
+    map.put("type", CMAFieldType.Link.toString());
+    map.put("linkType", "Entry");
+
+    contentType.addField(new CMAField().setId("array")
+        .setType(CMAFieldType.Array)
+        .setArrayItems(map));
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "import com.contentful.java.cda.model.CDAEntry;",
+        "import java.util.List;",
+        "",
+        "public class Parsley {",
+        "  private List<CDAEntry> array;",
+        "",
+        "  public Parsley() {",
+        "  }",
+        "",
+        "  public List<CDAEntry> getArray() {",
+        "    return array;",
+        "  }",
+        "",
+        "  public void setArray(List<CDAEntry> array) {",
+        "    this.array = array;",
+        "  }",
+        "}",
+        "");
+
+    String generatedSource = new Generator().generateModel(
+        "test", contentType, "Parsley")
+        .toString();
+
+    assertThat(generatedSource).isEqualTo(expectedSource);
+  }
+
+  @Test public void testEntriesArrayOfType() throws Exception {
+    CMAContentType contentType = new CMAContentType();
+
+    HashMap map = Maps.newHashMap();
+    map.put("type", CMAFieldType.Link.toString());
+    map.put("linkType", "Entry");
+    map.put("validations", Lists.<Map>newArrayList(ImmutableMap.of(
+        "linkContentType", Lists.newArrayList("abc"))));
+
+    CMAField field = new CMAField().setId("array").setType(CMAFieldType.Array).setArrayItems(map);
+
+    contentType.addField(field);
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "import java.util.List;",
+        "",
+        "public class Salt {",
+        "  private List<Pepper> array;",
+        "",
+        "  public Salt() {",
+        "  }",
+        "",
+        "  public List<Pepper> getArray() {",
+        "    return array;",
+        "  }",
+        "",
+        "  public void setArray(List<Pepper> array) {",
+        "    this.array = array;",
+        "  }",
+        "}",
+        "");
+
+    CMAContentType linkedContentType = new CMAContentType().setId("abc").setName("Pepper")
+        .addField(new CMAField().setId("whatever").setType(CMAFieldType.Text));
+
+    Generator generator = new Generator();
+    generator.models.put(linkedContentType.getResourceId(), "Pepper");
+
+    String generatedSource = generator.generateModel("test", contentType, "Salt").toString();
+
+    assertThat(generatedSource).isEqualTo(expectedSource);
   }
 }
