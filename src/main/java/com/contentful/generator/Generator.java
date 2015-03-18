@@ -60,9 +60,9 @@ public class Generator {
           path,
           Joiner.on(File.separatorChar).join(pkg.split("\\.")));
 
-      for (Map.Entry<String, String> item : models.entrySet()) {
+      for (String fileName : models.values()) {
         //noinspection ResultOfMethodCallIgnored
-        new File(generatedPath + File.separator + item.getValue() + ".java").delete();
+        new File(generatedPath + File.separator + fileName + ".java").delete();
       }
 
       throw new RuntimeException(e);
