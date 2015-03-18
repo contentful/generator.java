@@ -23,7 +23,7 @@ import javax.lang.model.element.Modifier;
 import retrofit.RetrofitError;
 
 public class Generator {
-  Map<String, String> models;
+  final Map<String, String> models;
 
   public Generator() {
     models = new HashMap<String, String>();
