@@ -4,6 +4,9 @@ import com.contentful.java.cma.Constants.CMAFieldType;
 import com.contentful.java.cma.model.CMAContentType;
 import com.contentful.java.cma.model.CMAField;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import java.util.Map;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -164,6 +167,49 @@ public class GeneratorTests {
 
     String generatedSource = new Generator().generateModel(
         "test", contentType, "Carrot")
+        .toString();
+
+    assertThat(expectedSource).isEqualTo(generatedSource);
+  }
+
+  @Test public void testLinkEntryOfType() throws Exception {
+    CMAContentType contentType = new CMAContentType();
+
+    CMAField field = new CMAField().setId("linkToEntry")
+        .setType(CMAFieldType.Link)
+        .setLinkType("Entry");
+
+    field.setValidations(Lists.<Map>newArrayList(ImmutableMap.of(
+        "linkContentType", Lists.newArrayList("abc"))));
+
+    contentType.addField(field);
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "public class Carrot {",
+        "  private SweetPotato linkToEntry;",
+        "",
+        "  public Carrot() {",
+        "  }",
+        "",
+        "  public SweetPotato getLinkToEntry() {",
+        "    return linkToEntry;",
+        "  }",
+        "",
+        "  public void setLinkToEntry(SweetPotato linkToEntry) {",
+        "    this.linkToEntry = linkToEntry;",
+        "  }",
+        "}",
+        "");
+
+    CMAContentType linkedContentType = new CMAContentType().setId("abc").setName("SweetPotato")
+        .addField(new CMAField().setId("whatever").setType(CMAFieldType.Text));
+
+    Generator generator = new Generator();
+    generator.models.put(linkedContentType.getResourceId(), "SweetPotato");
+
+    String generatedSource = generator.generateModel("test", contentType, "Carrot")
         .toString();
 
     assertThat(expectedSource).isEqualTo(generatedSource);
