@@ -4,13 +4,12 @@ import com.contentful.java.cma.Constants.CMAFieldType;
 import com.contentful.java.cma.model.CMAContentType;
 import com.contentful.java.cma.model.CMAField;
 import com.google.common.base.Joiner;
-import com.squareup.javapoet.JavaFile;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class GeneratorTests {
-  @Test public void testGenerateModel() throws Exception {
+  @Test public void testBaseFields() throws Exception {
     CMAContentType contentType = new CMAContentType()
         .addField(new CMAField().setId("i1").setType(CMAFieldType.Boolean))
         .addField(new CMAField().setId("i2").setType(CMAFieldType.Date))
@@ -19,8 +18,6 @@ public class GeneratorTests {
         .addField(new CMAField().setId("i5").setType(CMAFieldType.Symbol))
         .addField(new CMAField().setId("i6").setType(CMAFieldType.Text));
 
-    JavaFile javaFile = new Generator().generateModel("test", contentType, "Potato");
-    
     String expectedSource = Joiner.on('\n').join(
         "package test;",
         "",
@@ -92,6 +89,83 @@ public class GeneratorTests {
         "}",
         "");
 
-    assertThat(expectedSource).isEqualTo(javaFile.toString());
+    String generatedSource = new Generator().generateModel(
+        "test", contentType, "Potato").toString();
+
+    assertThat(expectedSource).isEqualTo(generatedSource);
+  }
+
+  @Test public void testLinkAsset() throws Exception {
+    CMAContentType contentType = new CMAContentType();
+
+    CMAField field = new CMAField().setId("linkToAsset")
+        .setType(CMAFieldType.Link)
+        .setLinkType("Asset");
+
+    contentType.addField(field);
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "import com.contentful.java.cda.model.CDAAsset;",
+        "",
+        "public class Lettuce {",
+        "  private CDAAsset linkToAsset;",
+        "",
+        "  public Lettuce() {",
+        "  }",
+        "",
+        "  public CDAAsset getLinkToAsset() {",
+        "    return linkToAsset;",
+        "  }",
+        "",
+        "  public void setLinkToAsset(CDAAsset linkToAsset) {",
+        "    this.linkToAsset = linkToAsset;",
+        "  }",
+        "}",
+        "");
+
+    String generatedSource = new Generator().generateModel(
+        "test", contentType, "Lettuce")
+        .toString();
+
+    assertThat(expectedSource).isEqualTo(generatedSource);
+  }
+
+  @Test public void testLinkEntry() throws Exception {
+    CMAContentType contentType = new CMAContentType();
+
+    CMAField field = new CMAField().setId("linkToEntry")
+        .setType(CMAFieldType.Link)
+        .setLinkType("Entry");
+
+    contentType.addField(field);
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "import com.contentful.java.cda.model.CDAEntry;",
+        "",
+        "public class Carrot {",
+        "  private CDAEntry linkToEntry;",
+        "",
+        "  public Carrot() {",
+        "  }",
+        "",
+        "  public CDAEntry getLinkToEntry() {",
+        "    return linkToEntry;",
+        "  }",
+        "",
+        "  public void setLinkToEntry(CDAEntry linkToEntry) {",
+        "    this.linkToEntry = linkToEntry;",
+        "  }",
+        "}",
+        "");
+
+    String generatedSource = new Generator().generateModel(
+        "test", contentType, "Carrot")
+        .toString();
+
+    assertThat(expectedSource).isEqualTo(generatedSource);
   }
 }

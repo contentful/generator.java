@@ -238,10 +238,6 @@ public class Generator {
   }
 
   static String normalize(String name, CaseFormat format) {
-    String str = name.replaceAll("[^\\w\\d]", "_")
-        .replaceAll("(.+)([A-Z]+)", "$1_$2")
-        .toUpperCase();
-
-    return CaseFormat.UPPER_UNDERSCORE.to(format, str);
+    return CaseFormat.LOWER_CAMEL.to(format, name.replaceAll("[^\\w\\d]", ""));
   }
 }
