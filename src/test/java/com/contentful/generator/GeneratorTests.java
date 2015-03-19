@@ -5,12 +5,10 @@ import com.contentful.java.cma.model.CMAContentType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.squareup.javapoet.JavaFile;
-import com.squareup.okhttp.mockwebserver.MockResponse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -110,14 +108,14 @@ public class GeneratorTests extends BaseTest {
     Mockito.verify(printer).print("Failed to fetch content types, reason: 401 Unauthorized");
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = GeneratorException.class)
   public void testGenerateCleansUpOnFailure() throws Exception {
     server.enqueue(newSuccessResponse("all_content_types_invalid_id.json"));
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
 
     try {
       new Generator(fileHandler, null).generate("spaceid", "test", ".", client);
-    } catch (RuntimeException e) {
+    } catch (GeneratorException e) {
       assertThat(e.getMessage()).isEqualTo(
           "java.lang.IllegalArgumentException: not a valid name: boolean");
 

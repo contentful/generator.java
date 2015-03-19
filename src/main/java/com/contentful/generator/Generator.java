@@ -84,7 +84,7 @@ public class Generator {
         fileHandler.delete(new File(generatedPath + File.separator + fileName + ".java"));
       }
 
-      throw new RuntimeException(e);
+      throw new GeneratorException(e);
     }
   }
 
