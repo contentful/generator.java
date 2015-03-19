@@ -1,0 +1,18 @@
+package test;
+
+import java.util.List;
+
+public class Test {
+  private List<LinkedResource> arrayOfEntriesWithType;
+
+  public Test() {
+  }
+
+  public List<LinkedResource> getArrayOfEntriesWithType() {
+    return arrayOfEntriesWithType;
+  }
+
+  public void setArrayOfEntriesWithType(List<LinkedResource> arrayOfEntriesWithType) {
+    this.arrayOfEntriesWithType = arrayOfEntriesWithType;
+  }
+}

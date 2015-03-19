@@ -1,0 +1,18 @@
+package test;
+
+import com.contentful.java.cda.model.CDAAsset;
+
+public class Test {
+  private CDAAsset linkToAsset;
+
+  public Test() {
+  }
+
+  public CDAAsset getLinkToAsset() {
+    return linkToAsset;
+  }
+
+  public void setLinkToAsset(CDAAsset linkToAsset) {
+    this.linkToAsset = linkToAsset;
+  }
+}
