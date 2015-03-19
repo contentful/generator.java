@@ -1,0 +1,50 @@
+{
+  "name": "Model",
+  "fields": [
+    {
+      "name": "linkToAsset",
+      "id": "linkToAsset",
+      "type": "Link",
+      "linkType": "Asset"
+    }
+  ],
+  "sys": {
+    "id": "ctid",
+    "type": "ContentType",
+    "createdAt": "2015-03-19T14:14:01.085Z",
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "uid"
+      }
+    },
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "sid"
+      }
+    },
+    "firstPublishedAt": "2015-03-19T14:19:19.480Z",
+    "publishedCounter": 1,
+    "publishedAt": "2015-03-19T14:19:19.480Z",
+    "publishedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "uid"
+      }
+    },
+    "publishedVersion": 194,
+    "version": 195,
+    "updatedAt": "2015-03-19T14:19:19.493Z",
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "uid"
+      }
+    }
+  }
+}

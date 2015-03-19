@@ -1,0 +1,18 @@
+package test;
+
+import java.util.List;
+
+public class Test {
+  private List arrayOfSymbols;
+
+  public Test() {
+  }
+
+  public List getArrayOfSymbols() {
+    return arrayOfSymbols;
+  }
+
+  public void setArrayOfSymbols(List arrayOfSymbols) {
+    this.arrayOfSymbols = arrayOfSymbols;
+  }
+}

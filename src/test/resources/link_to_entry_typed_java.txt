@@ -1,0 +1,16 @@
+package test;
+
+public class Test {
+  private LinkedResource entryWithType;
+
+  public Test() {
+  }
+
+  public LinkedResource getEntryWithType() {
+    return entryWithType;
+  }
+
+  public void setEntryWithType(LinkedResource entryWithType) {
+    this.entryWithType = entryWithType;
+  }
+}

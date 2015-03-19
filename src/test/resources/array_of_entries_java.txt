@@ -1,0 +1,19 @@
+package test;
+
+import com.contentful.java.cda.model.CDAEntry;
+import java.util.List;
+
+public class Test {
+  private List<CDAEntry> arrayOfEntries;
+
+  public Test() {
+  }
+
+  public List<CDAEntry> getArrayOfEntries() {
+    return arrayOfEntries;
+  }
+
+  public void setArrayOfEntries(List<CDAEntry> arrayOfEntries) {
+    this.arrayOfEntries = arrayOfEntries;
+  }
+}

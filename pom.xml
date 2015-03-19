@@ -52,6 +52,7 @@
 
     <!-- Dependencies -->
     <commons-cli.version>1.2</commons-cli.version>
+    <commons-io.version>2.4</commons-io.version>
     <javapoet.version>1.0.0</javapoet.version>
     <cda.version>2.0.1</cda.version>
     <cma.version>0.9.7</cma.version>
@@ -60,6 +61,9 @@
     <!-- Test Dependencies -->
     <junit.version>4.11</junit.version>
     <truth.version>0.25</truth.version>
+    <mockwebserver.version>2.3.0</mockwebserver.version>
+    <okhttp.version>2.3.0</okhttp.version>
+    <okhttp-urlconnection.version>2.3.0</okhttp-urlconnection.version>
   </properties>
 
   <dependencies>
@@ -106,9 +110,43 @@
       <version>${truth.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <version>${mockwebserver.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>okhttp-urlconnection</artifactId>
+      <version>${okhttp-urlconnection.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
