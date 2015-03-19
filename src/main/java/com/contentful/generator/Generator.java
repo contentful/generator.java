@@ -198,7 +198,7 @@ public class Generator {
     if (validations != null) {
       for (Map v : validations) {
         List linkContentType = (List) v.get("linkContentType");
-        int size = linkContentType == null ? 0 : v.size();
+        int size = linkContentType == null ? 0 : linkContentType.size();
         if (size > 1) {
           return null;
         } else if (size == 1) {

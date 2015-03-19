@@ -2,6 +2,10 @@ package com.contentful.generator;
 
 import com.contentful.generator.lib.TestUtils;
 import com.contentful.java.cma.model.CMAContentType;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Map;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -37,6 +41,32 @@ public class GeneratorTests extends BaseTest {
 
   @Test public void testArrayOfSymbols() throws Exception {
     generateAndAssert("array_of_symbols.json", "array_of_symbols_java.txt");
+  }
+
+  @Test public void testExtractContentType() throws Exception {
+    ArrayList<Map> validations = Lists.newArrayList();
+    ArrayList<String> contentTypes = Lists.newArrayList("a");
+    validations.add(ImmutableMap.of("linkContentType", contentTypes));
+    String result = Generator.extractSingleLinkContentType(validations);
+    assertThat(result).isEqualTo("a");
+  }
+
+  @Test public void testExtractContentTypeIsNullForMultipleTypes() throws Exception {
+    ArrayList<Map> validations = Lists.newArrayList();
+    ArrayList<String> contentTypes = Lists.newArrayList("a", "b");
+    validations.add(ImmutableMap.of("linkContentType", contentTypes));
+    String result = Generator.extractSingleLinkContentType(validations);
+    assertThat(result).isNull();
+  }
+
+  @Test public void testExtractContentTypeIsNullForMultipleValidations()
+      throws Exception {
+    ArrayList<Map> validations = Lists.newArrayList();
+    ArrayList<String> contentTypes = Lists.newArrayList("a");
+    validations.add(ImmutableMap.of("linkContentType", contentTypes));
+    validations.add(ImmutableMap.of("linkContentType", contentTypes));
+    String result = Generator.extractSingleLinkContentType(validations);
+    assertThat(result).isNull();
   }
 
   @Test(expected = IllegalArgumentException.class)
