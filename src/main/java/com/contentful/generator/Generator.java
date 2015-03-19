@@ -16,6 +16,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,16 @@ import javax.lang.model.element.Modifier;
 import retrofit.RetrofitError;
 
 public class Generator {
+  final FileHandler fileHandler;
   final Map<String, String> models;
 
+  Generator(FileHandler fileHandler) {
+    this.fileHandler = fileHandler;
+    this.models = new HashMap<String, String>();
+  }
+
   public Generator() {
-    models = new HashMap<String, String>();
+    this(new DefaultFileHandler());
   }
 
   /**
@@ -55,8 +62,10 @@ public class Generator {
           continue;
         }
 
-        JavaFile javaFile = generateModel(pkg, contentType, models.get(contentType.getResourceId()));
-        javaFile.writeTo(new File(path));
+        JavaFile javaFile = generateModel(pkg, contentType,
+            models.get(contentType.getResourceId()));
+
+        fileHandler.write(javaFile, path);
       }
     } catch (RetrofitError e) {
       System.out.println("Failed to fetch content types, reason: " + e.getMessage());
@@ -67,8 +76,7 @@ public class Generator {
           Joiner.on(File.separatorChar).join(pkg.split("\\.")));
 
       for (String fileName : models.values()) {
-        //noinspection ResultOfMethodCallIgnored
-        new File(generatedPath + File.separator + fileName + ".java").delete();
+        fileHandler.delete(new File(generatedPath + File.separator + fileName + ".java"));
       }
 
       throw new RuntimeException(e);
@@ -255,5 +263,20 @@ public class Generator {
 
   static String normalize(String name, CaseFormat format) {
     return CaseFormat.LOWER_CAMEL.to(format, name.replaceAll("[^\\w\\d]", ""));
+  }
+
+  interface FileHandler {
+    void write(JavaFile javaFile, String path) throws IOException;
+    boolean delete(File file);
+  }
+
+  static class DefaultFileHandler implements FileHandler {
+    @Override public void write(JavaFile javaFile, String path) throws IOException {
+      javaFile.writeTo(new File(path));
+    }
+
+    @Override public boolean delete(File file) {
+      return file.delete();
+    }
   }
 }

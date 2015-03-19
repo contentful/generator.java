@@ -4,9 +4,12 @@ import com.contentful.generator.lib.TestUtils;
 import com.contentful.java.cma.model.CMAContentType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.squareup.javapoet.JavaFile;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -77,6 +80,15 @@ public class GeneratorTests extends BaseTest {
       assertThat(e.getMessage()).isEqualTo("Failed to create FieldSpec for \"test\"");
       throw e;
     }
+  }
+
+  @Test public void testGenerate() throws Exception {
+    server.enqueue(newSuccessResponse("all_content_types.json"));
+    Generator.FileHandler mock = Mockito.mock(Generator.FileHandler.class);
+    new Generator(mock).generate("spaceid", "test", ".", client);
+
+    Mockito.verify(mock, Mockito.times(1)).write(Mockito.any(JavaFile.class), Mockito.anyString());
+    Mockito.verify(mock, Mockito.times(0)).delete(Mockito.any(File.class));
   }
 
   void generateAndAssert(String responseFileName, String expectedCodeFileName) throws Exception {
