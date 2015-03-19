@@ -1,0 +1,88 @@
+package test;
+
+import java.util.Map;
+
+public class Test {
+  private String fieldText;
+
+  private String fieldSymbol;
+
+  private Integer fieldNumber;
+
+  private Double fieldDecimalNumber;
+
+  private Boolean fieldYesNo;
+
+  private String fieldDateTime;
+
+  private Map fieldLocation;
+
+  private Map fieldObject;
+
+  public Test() {
+  }
+
+  public String getFieldText() {
+    return fieldText;
+  }
+
+  public void setFieldText(String fieldText) {
+    this.fieldText = fieldText;
+  }
+
+  public String getFieldSymbol() {
+    return fieldSymbol;
+  }
+
+  public void setFieldSymbol(String fieldSymbol) {
+    this.fieldSymbol = fieldSymbol;
+  }
+
+  public Integer getFieldNumber() {
+    return fieldNumber;
+  }
+
+  public void setFieldNumber(Integer fieldNumber) {
+    this.fieldNumber = fieldNumber;
+  }
+
+  public Double getFieldDecimalNumber() {
+    return fieldDecimalNumber;
+  }
+
+  public void setFieldDecimalNumber(Double fieldDecimalNumber) {
+    this.fieldDecimalNumber = fieldDecimalNumber;
+  }
+
+  public Boolean getFieldYesNo() {
+    return fieldYesNo;
+  }
+
+  public void setFieldYesNo(Boolean fieldYesNo) {
+    this.fieldYesNo = fieldYesNo;
+  }
+
+  public String getFieldDateTime() {
+    return fieldDateTime;
+  }
+
+  public void setFieldDateTime(String fieldDateTime) {
+    this.fieldDateTime = fieldDateTime;
+  }
+
+  public Map getFieldLocation() {
+    return fieldLocation;
+  }
+
+  public void setFieldLocation(Map fieldLocation) {
+    this.fieldLocation = fieldLocation;
+  }
+
+  public Map getFieldObject() {
+    return fieldObject;
+  }
+
+  public void setFieldObject(Map fieldObject) {
+    this.fieldObject = fieldObject;
+  }
+}
