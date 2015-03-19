@@ -229,10 +229,9 @@ public class Generator {
       case Symbol:
         return String.class;
       case Text:
+      default:
         return String.class;
     }
-
-    throw new IllegalArgumentException("Unexpected field type: " + fieldType);
   }
 
   static MethodSpec fieldSetter(FieldSpec fieldSpec) {

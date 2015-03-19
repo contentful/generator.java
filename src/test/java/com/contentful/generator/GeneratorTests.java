@@ -14,92 +14,6 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 public class GeneratorTests {
-  @Test public void testBaseFields() throws Exception {
-    CMAContentType contentType = new CMAContentType()
-        .addField(new CMAField().setId("i1").setType(CMAFieldType.Boolean))
-        .addField(new CMAField().setId("i2").setType(CMAFieldType.Date))
-        .addField(new CMAField().setId("i3").setType(CMAFieldType.Integer))
-        .addField(new CMAField().setId("i4").setType(CMAFieldType.Location))
-        .addField(new CMAField().setId("i5").setType(CMAFieldType.Symbol))
-        .addField(new CMAField().setId("i6").setType(CMAFieldType.Text));
-
-    String expectedSource = Joiner.on('\n').join(
-        "package test;",
-        "",
-        "import java.util.Map;",
-        "",
-        "public class Potato {",
-        "  private Boolean i1;",
-        "",
-        "  private String i2;",
-        "",
-        "  private Integer i3;",
-        "",
-        "  private Map i4;",
-        "",
-        "  private String i5;",
-        "",
-        "  private String i6;",
-        "",
-        "  public Potato() {",
-        "  }",
-        "",
-        "  public Boolean getI1() {",
-        "    return i1;",
-        "  }",
-        "",
-        "  public void setI1(Boolean i1) {",
-        "    this.i1 = i1;",
-        "  }",
-        "",
-        "  public String getI2() {",
-        "    return i2;",
-        "  }",
-        "",
-        "  public void setI2(String i2) {",
-        "    this.i2 = i2;",
-        "  }",
-        "",
-        "  public Integer getI3() {",
-        "    return i3;",
-        "  }",
-        "",
-        "  public void setI3(Integer i3) {",
-        "    this.i3 = i3;",
-        "  }",
-        "",
-        "  public Map getI4() {",
-        "    return i4;",
-        "  }",
-        "",
-        "  public void setI4(Map i4) {",
-        "    this.i4 = i4;",
-        "  }",
-        "",
-        "  public String getI5() {",
-        "    return i5;",
-        "  }",
-        "",
-        "  public void setI5(String i5) {",
-        "    this.i5 = i5;",
-        "  }",
-        "",
-        "  public String getI6() {",
-        "    return i6;",
-        "  }",
-        "",
-        "  public void setI6(String i6) {",
-        "    this.i6 = i6;",
-        "  }",
-        "}",
-        "");
-
-    String generatedSource = new Generator().generateModel(
-        "test", contentType, "Potato").toString();
-
-    assertThat(generatedSource).isEqualTo(expectedSource);
-  }
-
   @Test public void testLinkAsset() throws Exception {
     CMAContentType contentType = new CMAContentType();
 
@@ -339,6 +253,114 @@ public class GeneratorTests {
     generator.models.put(linkedContentType.getResourceId(), "Pepper");
 
     String generatedSource = generator.generateModel("test", contentType, "Salt").toString();
+
+    assertThat(generatedSource).isEqualTo(expectedSource);
+  }
+
+  @Test public void testBaseFields() throws Exception {
+    CMAContentType contentType = new CMAContentType()
+        .addField(new CMAField().setId("i1").setType(CMAFieldType.Boolean))
+        .addField(new CMAField().setId("i2").setType(CMAFieldType.Date))
+        .addField(new CMAField().setId("i3").setType(CMAFieldType.Integer))
+        .addField(new CMAField().setId("i4").setType(CMAFieldType.Location))
+        .addField(new CMAField().setId("i5").setType(CMAFieldType.Symbol))
+        .addField(new CMAField().setId("i6").setType(CMAFieldType.Text))
+        .addField(new CMAField().setId("i7").setType(CMAFieldType.Number))
+        .addField(new CMAField().setId("i8").setType(CMAFieldType.Object));
+
+    String expectedSource = Joiner.on('\n').join(
+        "package test;",
+        "",
+        "import java.util.Map;",
+        "",
+        "public class Potato {",
+        "  private Boolean i1;",
+        "",
+        "  private String i2;",
+        "",
+        "  private Integer i3;",
+        "",
+        "  private Map i4;",
+        "",
+        "  private String i5;",
+        "",
+        "  private String i6;",
+        "",
+        "  private Double i7;",
+        "",
+        "  private Map i8;",
+        "",
+        "  public Potato() {",
+        "  }",
+        "",
+        "  public Boolean getI1() {",
+        "    return i1;",
+        "  }",
+        "",
+        "  public void setI1(Boolean i1) {",
+        "    this.i1 = i1;",
+        "  }",
+        "",
+        "  public String getI2() {",
+        "    return i2;",
+        "  }",
+        "",
+        "  public void setI2(String i2) {",
+        "    this.i2 = i2;",
+        "  }",
+        "",
+        "  public Integer getI3() {",
+        "    return i3;",
+        "  }",
+        "",
+        "  public void setI3(Integer i3) {",
+        "    this.i3 = i3;",
+        "  }",
+        "",
+        "  public Map getI4() {",
+        "    return i4;",
+        "  }",
+        "",
+        "  public void setI4(Map i4) {",
+        "    this.i4 = i4;",
+        "  }",
+        "",
+        "  public String getI5() {",
+        "    return i5;",
+        "  }",
+        "",
+        "  public void setI5(String i5) {",
+        "    this.i5 = i5;",
+        "  }",
+        "",
+        "  public String getI6() {",
+        "    return i6;",
+        "  }",
+        "",
+        "  public void setI6(String i6) {",
+        "    this.i6 = i6;",
+        "  }",
+        "",
+        "  public Double getI7() {",
+        "    return i7;",
+        "  }",
+        "",
+        "  public void setI7(Double i7) {",
+        "    this.i7 = i7;",
+        "  }",
+        "",
+        "  public Map getI8() {",
+        "    return i8;",
+        "  }",
+        "",
+        "  public void setI8(Map i8) {",
+        "    this.i8 = i8;",
+        "  }",
+        "}",
+        "");
+
+    String generatedSource = new Generator().generateModel(
+        "test", contentType, "Potato").toString();
 
     assertThat(generatedSource).isEqualTo(expectedSource);
   }
