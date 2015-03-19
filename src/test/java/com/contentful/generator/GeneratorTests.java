@@ -39,6 +39,16 @@ public class GeneratorTests extends BaseTest {
     generateAndAssert("array_of_symbols.json", "array_of_symbols_java.txt");
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testCreateLinkFieldSpecWithInvalidTypeThrows() throws Exception {
+    try {
+      new Generator().createLinkFieldSpec("invalid", null, "test", "test");
+    } catch (IllegalArgumentException e) {
+      assertThat(e.getMessage()).isEqualTo("Failed to create FieldSpec for \"test\"");
+      throw e;
+    }
+  }
+
   void generateAndAssert(String responseFileName, String expectedCodeFileName) throws Exception {
     server.enqueue(newSuccessResponse(responseFileName));
     CMAContentType contentType = client.contentTypes().fetchOne("sid", "ctid");
