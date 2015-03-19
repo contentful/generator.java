@@ -7,6 +7,12 @@
       "type": "Text"
     },
     {
+      "name": "disabledField",
+      "id": "disabledField",
+      "type": "Text",
+      "disabled": true
+    },
+    {
       "name": "fieldSymbol",
       "id": "fieldSymbol",
       "type": "Symbol"
