@@ -37,9 +37,9 @@ public class Main {
 
         new Generator().generate(
             line.getOptionValue("space"),
-            line.getOptionValue("token"),
             line.getOptionValue("package"),
-            line.getOptionValue("folder"));
+            line.getOptionValue("folder"),
+            line.getOptionValue("token"));
       } else {
         usage(options);
       }
