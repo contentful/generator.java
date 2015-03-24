@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/contentful/generator.java.svg)](https://travis-ci.org/contentful/generator.java/builds#) [![Coverage Status](https://img.shields.io/coveralls/contentful/generator.java.svg)](https://coveralls.io/r/contentful/generator.java?branch=master)
 
-POJO generator for your Contentful models.
+Code generator for Contentful models.
 
 > [Contentful][1] is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit & manage content in the cloud and publish it anywhere via powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.
 
-This tool can be used to fetch content types from a Contentful space, and generate corresponding POJO models.
+This tool can be used to fetch content types from a Contentful space, and generate corresponding java source files.
 
 Link / Array fields that are restricted to *exactly* one content type (via field validation) will reference the generated class corresponding to that content type.
 
