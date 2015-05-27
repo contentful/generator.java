@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
-  <description>POJO generator for Contentful models.</description>
+  <description>Java code generator for Contentful models.</description>
   <url>http://github.com/contentful/generator.java</url>
 
   <parent>

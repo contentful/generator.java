@@ -23,7 +23,6 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
-import retrofit.RestAdapter;
 
 public class BaseTest {
   MockWebServer server;
@@ -36,7 +35,6 @@ public class BaseTest {
     client = new CMAClient.Builder()
         .setAccessToken("supersecret")
         .setEndpoint(server.getUrl("/").toString())
-        .setLogLevel(RestAdapter.LogLevel.FULL)
         .build();
   }
 
