@@ -55,7 +55,7 @@ public class Generator {
   }
 
   /**
-   * Fetch content types from the given space and generate corresponding POJOs.
+   * Fetch content types from the given space and generate corresponding model classes.
    *
    * @param spaceId space id
    * @param pkg package name for generated classes
