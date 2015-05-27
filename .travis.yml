@@ -1,14 +1,20 @@
 language: java
-install: mvn install -DskipTests=true -Dgpg.skip=true
-sudo: false
 
 jdk:
   - oraclejdk7
   - oraclejdk8
 
+after_success:
+  - .buildscript/deploy_snapshot.sh
+  - mvn clean cobertura:cobertura coveralls:report
+
+env:
+  global:
+    - secure: dbsUEUy7bWqzTji0nk4wGoSZcHhVuVD0wkbAgWQoTq75jkjQCY0PgQqtRV1JvjP9jj8UbFrxfzgG0X214VwEB6VJ2mcF4gX63Ta/ZJlLmt3NdQX1s2WMUBWAacC2ZfcCnXucIevSN3KjVf915BHGjvHxRQ+/m/y4os+7FMjCx6g=
+    - secure: bNigv+TG/WCZjikWaxSEFCqhfuZra6IvZN5GHSm1xZ3f
+
+sudo: false
+
 branches:
   except:
     - gh-pages
-
-after_success:
-  - mvn clean cobertura:cobertura coveralls:report
