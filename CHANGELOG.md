@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - TBD
 
 ## Version [0.9.1] - 2015-06-02
-- Changed: Generated models now comply with Vault[vault].
+- Changed: Generated models now comply with [Vault][vault].
 
 ## Version 1.0.0 - 2014-08-13
 Initial release.
