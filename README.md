@@ -18,12 +18,12 @@ Download [the latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>com.contentful.generator</groupId>
   <artifactId>generator</artifactId>
-  <version>0.9.1</version>
+  <version>0.9.2</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.generator:generator:0.9.1'
+compile 'com.contentful.generator:generator:0.9.2'
 ```
 
 Usage
