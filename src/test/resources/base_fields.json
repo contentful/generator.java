@@ -2,8 +2,8 @@
   "name": "Model",
   "fields": [
     {
-      "name": "fieldText",
-      "id": "fieldText",
+      "name": "text",
+      "id": "text",
       "type": "Text"
     },
     {
@@ -13,38 +13,38 @@
       "disabled": true
     },
     {
-      "name": "fieldSymbol",
-      "id": "fieldSymbol",
+      "name": "symbol",
+      "id": "symbol",
       "type": "Symbol"
     },
     {
-      "name": "fieldNumber",
-      "id": "fieldNumber",
+      "name": "number",
+      "id": "number",
       "type": "Integer"
     },
     {
-      "name": "fieldDecimalNumber",
-      "id": "fieldDecimalNumber",
+      "name": "decimal",
+      "id": "decimal",
       "type": "Number"
     },
     {
-      "name": "fieldYesNo",
-      "id": "fieldYesNo",
+      "name": "yesNo",
+      "id": "yesNo",
       "type": "Boolean"
     },
     {
-      "name": "fieldDateTime",
-      "id": "fieldDateTime",
+      "name": "dateTime",
+      "id": "dateTime",
       "type": "Date"
     },
     {
-      "name": "fieldLocation",
-      "id": "fieldLocation",
+      "name": "location",
+      "id": "location",
       "type": "Location"
     },
     {
-      "name": "fieldObject",
-      "id": "fieldObject",
+      "name": "obj",
+      "id": "obj",
       "type": "Object"
     }
   ],

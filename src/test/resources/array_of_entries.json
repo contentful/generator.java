@@ -2,12 +2,19 @@
   "name": "Model",
   "fields": [
     {
-      "name": "arrayOfEntries",
-      "id": "arrayOfEntries",
+      "name": "entries",
+      "id": "entries",
       "type": "Array",
       "items": {
         "type": "Link",
-        "linkType": "Entry"
+        "linkType": "Entry",
+        "validations": [
+          {
+            "linkContentType": [
+              "linked-id"
+            ]
+          }
+        ]
       }
     }
   ],
