@@ -17,49 +17,79 @@
 package com.contentful.generator;
 
 import com.contentful.generator.lib.TestUtils;
+import com.contentful.java.cma.Constants;
+import com.contentful.java.cma.Constants.CMAFieldType;
 import com.contentful.java.cma.model.CMAContentType;
+import com.contentful.java.cma.model.CMAField;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.squareup.javapoet.JavaFile;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class GeneratorTests extends BaseTest {
   @Test public void testBaseFields() throws Exception {
-    generateAndAssert("base_fields.json", "base_fields_java.txt");
+    generateAndAssert("base_fields.json", "BaseFields");
   }
 
   @Test public void testLinkToAsset() throws Exception {
-    generateAndAssert("link_to_asset.json", "link_to_asset_java.txt");
+    generateAndAssert("link_to_asset.json", "LinkToAsset");
   }
 
   @Test public void testLinkToEntry() throws Exception {
-    generateAndAssert("link_to_entry.json", "link_to_entry_java.txt");
-  }
-
-  @Test public void testLinkToEntryTyped() throws Exception {
-    generateAndAssert("link_to_entry_typed.json", "link_to_entry_typed_java.txt");
+    generateAndAssert("link_to_entry.json", "LinkToEntry");
   }
 
   @Test public void testArrayOfAssets() throws Exception {
-    generateAndAssert("array_of_assets.json", "array_of_assets_java.txt");
-  }
-
-  @Test public void testArrayOfEntries() throws Exception {
-    generateAndAssert("array_of_entries.json", "array_of_entries_java.txt");
+    generateAndAssert("array_of_assets.json", "ArrayOfAssets");
   }
 
   @Test public void testArrayOfEntriesTyped() throws Exception {
-    generateAndAssert("array_of_entries_typed.json", "array_of_entries_typed_java.txt");
+    generateAndAssert("array_of_entries.json", "ArrayOfEntries");
   }
 
   @Test public void testArrayOfSymbols() throws Exception {
-    generateAndAssert("array_of_symbols.json", "array_of_symbols_java.txt");
+    generateAndAssert("array_of_symbols.json", "ArrayOfSymbols");
+  }
+
+  @Test(expected = GeneratorException.class)
+  public void testEntryWithNoTypeThrows() throws Exception {
+    try {
+      CMAField field =
+          new CMAField().setId("fid").setType(CMAFieldType.Link).setLinkType("Entry");
+
+      new Generator().createFieldSpec(field, "test", "name", "ctid");
+    } catch (GeneratorException e) {
+      assertEquals("Field \"fid\" for content type \"ctid\" is missing link validation, "
+          + "must have content type validation.", e.getMessage());
+      throw e;
+    }
+  }
+
+  @Test(expected = GeneratorException.class)
+  public void testArrayWithNoTypeThrows() throws Exception {
+    try {
+      CMAField field = new CMAField().setId("fid").setType(CMAFieldType.Array);
+
+      field.setArrayItems(new HashMap(){{
+        put("type", "Link");
+        put("linkType", "Entry");
+      }});
+
+      new Generator().createFieldSpec(field, "test", "name", "ctid");
+    } catch (GeneratorException e) {
+      assertEquals("Field \"fid\" for content type \"ctid\" is missing link validation, "
+              + "must have content type validation.", e.getMessage());
+      throw e;
+    }
   }
 
   @Test public void testExtractContentType() throws Exception {
@@ -91,7 +121,7 @@ public class GeneratorTests extends BaseTest {
   @Test(expected = IllegalArgumentException.class)
   public void testCreateLinkFieldSpecWithInvalidTypeThrows() throws Exception {
     try {
-      new Generator().createLinkFieldSpec("invalid", null, "test", "test");
+      new Generator().createLinkFieldSpec("invalid", null, "test", "test", "fieldId", "ctid");
     } catch (IllegalArgumentException e) {
       assertThat(e.getMessage()).isEqualTo("Failed to create FieldSpec for \"test\"");
       throw e;
@@ -144,14 +174,14 @@ public class GeneratorTests extends BaseTest {
     }
   }
 
-  void generateAndAssert(String responseFileName, String expectedCodeFileName) throws Exception {
+  void generateAndAssert(String responseFileName, String className) throws Exception {
     server.enqueue(newSuccessResponse(responseFileName));
     CMAContentType contentType = client.contentTypes().fetchOne("sid", "ctid");
 
     Generator generator = new Generator();
     generator.models.put("linked-id", "LinkedResource");
 
-    String generatedSource = generator.generateModel("test", contentType, "Test").toString();
-    assertThat(generatedSource).isEqualTo(TestUtils.readTestResource(expectedCodeFileName));
+    String generatedSource = generator.generateModel("test", contentType, className).toString();
+    assertThat(generatedSource).isEqualTo(TestUtils.readTestResource(className + ".java"));
   }
 }

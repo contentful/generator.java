@@ -2,8 +2,8 @@
   "name": "Model",
   "fields": [
     {
-      "name": "arrayOfSymbols",
-      "id": "arrayOfSymbols",
+      "name": "symbols",
+      "id": "symbols",
       "type": "Array",
       "items": {
         "type": "Symbol"

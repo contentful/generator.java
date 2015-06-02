@@ -16,20 +16,22 @@
 
 package com.contentful.generator;
 
-import com.contentful.java.cda.model.CDAAsset;
-import com.contentful.java.cda.model.CDAEntry;
 import com.contentful.java.cma.CMAClient;
 import com.contentful.java.cma.Constants;
 import com.contentful.java.cma.model.CMAArray;
 import com.contentful.java.cma.model.CMAContentType;
 import com.contentful.java.cma.model.CMAField;
+import com.contentful.vault.ContentType;
+import com.contentful.vault.Field;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
 import java.io.IOException;
@@ -121,11 +123,25 @@ public class Generator {
     generate(spaceId, pkg, path, client);
   }
 
+  AnnotationSpec annotateModel(CMAContentType contentType) {
+    return AnnotationSpec.builder(ContentType.class)
+        .addMember("value", "$S", contentType.getSys().get("id"))
+        .build();
+  }
+
+  AnnotationSpec annotateField(String id, String fieldName) {
+    AnnotationSpec.Builder builder = AnnotationSpec.builder(Field.class);
+    if (!id.equals(fieldName)) {
+      builder.addMember("value", "$S", id);
+    }
+    return builder.build();
+  }
+
   JavaFile generateModel(String pkg, CMAContentType contentType, String className)
       throws Exception {
     TypeSpec.Builder builder = TypeSpec.classBuilder(className)
         .addModifiers(Modifier.PUBLIC)
-        .addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
+        .addAnnotation(annotateModel(contentType));
 
     for (CMAField field : contentType.getFields()) {
       if (field.isDisabled()) {
@@ -133,89 +149,93 @@ public class Generator {
       }
 
       String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
-      FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName);
+      FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName, contentType.getResourceId());
 
       builder.addField(fieldSpec)
-          .addMethod(fieldGetter(fieldSpec))
-          .addMethod(fieldSetter(fieldSpec));
+          .addMethod(fieldGetter(fieldSpec));
     }
 
     return JavaFile.builder(pkg, builder.build()).skipJavaLangImports(true).build();
   }
 
-  FieldSpec createArrayFieldSpec(CMAField field, String pkg, String fieldName) {
-    HashMap arrayItems = field.getArrayItems();
+  FieldSpec createArrayFieldSpec(CMAField field, String pkg, String fieldName,
+      String parentContentTypeId) {
+    Map arrayItems = field.getArrayItems();
+    String fieldId = field.getId();
     if ("Link".equals(arrayItems.get("type"))) {
       String linkType = (String) arrayItems.get("linkType");
       if ("Asset".equals(linkType)) {
-        return FieldSpec.builder(
-            parameterizedList(CDAAsset.class),
-            fieldName,
-            Modifier.PRIVATE).build();
+        return fieldBuilder(
+            parameterizedList("com.contentful.vault", "Asset"), fieldName, fieldId).build();
       } else if ("Entry".equals(linkType)) {
         //noinspection unchecked
         String linkContentType = extractSingleLinkContentType(
             (List<Map>) arrayItems.get("validations"));
 
         if (linkContentType == null) {
-          return FieldSpec.builder(
-              parameterizedList(CDAEntry.class),
-              fieldName,
-              Modifier.PRIVATE).build();
+          throwLinkNoContentType(parentContentTypeId, fieldId);
         } else {
-          return FieldSpec.builder(
-              parameterizedList(pkg, models.get(linkContentType)),
-              fieldName,
-              Modifier.PRIVATE).build();
+          return fieldBuilder(parameterizedList(pkg, models.get(linkContentType)), fieldName,
+              fieldId).build();
         }
+      } else {
+        throw new GeneratorException("Invalid array linkType.");
       }
     }
-    return FieldSpec.builder(List.class, fieldName, Modifier.PRIVATE).build();
+    return fieldBuilder(ClassName.get(List.class), fieldName, fieldId).build();
   }
 
-  FieldSpec createFieldSpec(CMAField field, String pkg, String fieldName) {
+  FieldSpec.Builder fieldBuilder(TypeName type, String fieldName, String fieldId) {
+    FieldSpec.Builder builder = FieldSpec.builder(type, fieldName);
+    AnnotationSpec.Builder annotation = AnnotationSpec.builder(Field.class);
+    if (!fieldId.equals(fieldName)) {
+      annotation.addMember("value", "$S", fieldId);
+    }
+    return builder.addAnnotation(annotation.build());
+  }
+
+  FieldSpec createFieldSpec(CMAField field, String pkg, String fieldName,
+      String parentContentTypeId) {
     Constants.CMAFieldType fieldType = field.getType();
+    String fieldId = field.getId();
     switch (fieldType) {
       case Array:
-        return createArrayFieldSpec(field, pkg, fieldName);
+        return createArrayFieldSpec(field, pkg, fieldName, parentContentTypeId);
       case Link:
-        return createLinkFieldSpec(field.getLinkType(), field.getValidations(), pkg, fieldName);
+        return createLinkFieldSpec(field.getLinkType(), field.getValidations(), pkg, fieldName,
+            fieldId, parentContentTypeId);
     }
-    return fieldSpecForClass(fieldName, classForFieldType(fieldType));
+    return fieldBuilder(ClassName.get(classForFieldType(fieldType)), fieldName, fieldId).build();
   }
 
   FieldSpec createLinkFieldSpec(String linkType, List<Map> validations, String pkg,
-      String fieldName) {
-    Class clazz = null;
+      String fieldName, String fieldId, String parentContentTypeId) {
     ClassName className = null;
 
     if ("Asset".equals(linkType)) {
-      clazz = CDAAsset.class;
+      className = ClassName.get("com.contentful.vault", "Asset");
     } else if ("Entry".equals(linkType)) {
       String linkContentType = extractSingleLinkContentType(validations);
       if (linkContentType == null) {
-        clazz = CDAEntry.class;
+        throwLinkNoContentType(parentContentTypeId, fieldId);
       } else {
         className = ClassName.get(pkg, models.get(linkContentType));
       }
     }
 
-    if (clazz != null) {
-      return FieldSpec.builder(clazz, fieldName, Modifier.PRIVATE).build();
-    } else if (className != null) {
-      return FieldSpec.builder(className, fieldName, Modifier.PRIVATE).build();
+    if (className != null) {
+      return fieldBuilder(className, fieldName, fieldId).build();
     }
 
     throw new IllegalArgumentException("Failed to create FieldSpec for "
         + "\"" + fieldName + "\"");
   }
 
-  static FieldSpec fieldSpecForClass(String fieldName, Class clazz) {
-    return FieldSpec.builder(clazz, fieldName, Modifier.PRIVATE).build();
-  }
-
-  static ParameterizedTypeName parameterizedList(Class clazz) {
-    return ParameterizedTypeName.get(List.class, clazz);
+  static void throwLinkNoContentType(String contentTypeId, String fieldId) {
+    throw new GeneratorException(String.format(
+        "Field \"%s\" for content type \"%s\" is missing link validation, "
+            + "must have content type validation.",
+        fieldId, contentTypeId));
   }
 
   static ParameterizedTypeName parameterizedList(String pkg, String className) {
@@ -263,18 +283,8 @@ public class Generator {
     }
   }
 
-  static MethodSpec fieldSetter(FieldSpec fieldSpec) {
-    String methodName = "set" + normalize(fieldSpec.name, CaseFormat.UPPER_CAMEL);
-    return MethodSpec.methodBuilder(methodName)
-        .addParameter(fieldSpec.type, fieldSpec.name)
-        .returns(void.class)
-        .addModifiers(Modifier.PUBLIC)
-        .addStatement("this.$N = $N", fieldSpec.name, fieldSpec.name)
-        .build();
-  }
-
   static MethodSpec fieldGetter(FieldSpec fieldSpec) {
-    String methodName = "get" + normalize(fieldSpec.name, CaseFormat.UPPER_CAMEL);
+    String methodName = normalize(fieldSpec.name, CaseFormat.LOWER_CAMEL);
     return MethodSpec.methodBuilder(methodName)
         .returns(fieldSpec.type)
         .addModifiers(Modifier.PUBLIC)
@@ -283,7 +293,11 @@ public class Generator {
   }
 
   static String normalize(String name, CaseFormat format) {
-    return CaseFormat.LOWER_CAMEL.to(format, name.replaceAll("[^\\w\\d]", ""));
+    String normalized = name.substring(0, 1).toLowerCase();
+    if (name.length() > 1) {
+      normalized += name.substring(1);
+    }
+    return CaseFormat.LOWER_CAMEL.to(format, normalized.replaceAll("[^\\w\\d]", ""));
   }
 
   interface FileHandler {

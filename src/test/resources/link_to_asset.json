@@ -2,8 +2,8 @@
   "name": "Model",
   "fields": [
     {
-      "name": "linkToAsset",
-      "id": "linkToAsset",
+      "name": "asset",
+      "id": "asset",
       "type": "Link",
       "linkType": "Asset"
     }

@@ -2,10 +2,17 @@
   "name": "Model",
   "fields": [
     {
-      "name": "linkToEntry",
-      "id": "linkToEntry",
+      "name": "entry",
+      "id": "entry",
       "type": "Link",
-      "linkType": "Entry"
+      "linkType": "Entry",
+      "validations": [
+        {
+          "linkContentType": [
+            "linked-id"
+          ]
+        }
+      ]
     }
   ],
   "sys": {
