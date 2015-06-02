@@ -141,6 +141,7 @@ public class Generator {
       throws Exception {
     TypeSpec.Builder builder = TypeSpec.classBuilder(className)
         .addModifiers(Modifier.PUBLIC)
+        .superclass(ClassName.get("com.contentful.vault", "Resource"))
         .addAnnotation(annotateModel(contentType));
 
     for (CMAField field : contentType.getFields()) {

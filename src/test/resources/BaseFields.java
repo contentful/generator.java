@@ -2,10 +2,11 @@ package test;
 
 import com.contentful.vault.ContentType;
 import com.contentful.vault.Field;
+import com.contentful.vault.Resource;
 import java.util.Map;
 
 @ContentType("ctid")
-public class BaseFields {
+public class BaseFields extends Resource {
   @Field
   String text;
 
