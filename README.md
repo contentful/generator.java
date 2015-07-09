@@ -1,6 +1,6 @@
 # generator.java
 
-[![Build Status](https://travis-ci.org/contentful/generator.java.svg)](https://travis-ci.org/contentful/generator.java/builds#) [![Coverage Status](https://img.shields.io/coveralls/contentful/generator.java.svg)](https://coveralls.io/r/contentful/generator.java?branch=master)
+[![Build Status](https://travis-ci.org/contentful/generator.java.svg)](https://travis-ci.org/contentful/generator.java/builds#)
 
 Code generator for Contentful models.
 
