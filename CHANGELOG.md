@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [0.9.2][unreleased] - (in development)
+## Version [0.9.4][unreleased] - (in development)
 - TBD
+
+## Version [0.9.3] - 2015-12-29
+- renabling binard distribution
 
 ## Version [0.9.2] - 2015-06-02
 - Fixed: Generated models now `Resource`.
@@ -14,7 +17,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 0.9.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/generator.java/compare/generator-0.9.2...HEAD
+[unreleased]: https://github.com/contentful/generator.java/compare/generator-0.9.3...HEAD
+[0.9.3]: https://github.com/contentful/generator.java/compare/generator-0.9.2...generator-0.9.3
 [0.9.2]: https://github.com/contentful/generator.java/compare/generator-0.9.1...generator-0.9.2
 [0.9.1]: https://github.com/contentful/generator.java/compare/0.9.0...generator-0.9.1
 [vault]: https://github.com/contentful/vault
