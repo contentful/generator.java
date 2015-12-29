@@ -48,7 +48,7 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE][4] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://search.maven.org/remote_content?g=com.contentful.generator&a=generator&v=LATEST
+ [2]: http://search.maven.org/remotecontent?filepath=com/contentful/generator/generator/0.9.3/generator-0.9.3-jar-with-dependencies.jar
  [3]: https://contentful.github.io/generator.java/javadoc
  [4]: https://raw.githubusercontent.com/contentful/contentful-management.java/master/LICENSE.txt
  
