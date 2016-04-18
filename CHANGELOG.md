@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Changed: Vault 0.9.3 - 2.0.0
 
 ## Version [0.9.3] - 2015-12-29
-- renabling binard distribution
+- Fixed: enabling binary distribution
 
 ## Version [0.9.2] - 2015-06-02
 - Fixed: Generated models now `Resource`.
