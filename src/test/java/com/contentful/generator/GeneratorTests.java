@@ -148,10 +148,20 @@ public class GeneratorTests extends BaseTest {
     Mockito.verify(printer).print("WARNING: Ignoring Content Type (id=\"ctid\"), has no name.");
   }
 
-  @Test public void testGenerateWrapsNetworkError() throws Exception {
+  @Test(expected = GeneratorException.class)
+  public void testGenerateWrapsNetworkError() throws Exception {
     Generator.Printer printer = Mockito.mock(Generator.Printer.class);
-    new Generator(null, printer).generate("spaceid", "test", ".", "invalid-access-token");
-    Mockito.verify(printer).print("Failed to fetch content types, reason: 401 Unauthorized");
+    try {
+      new Generator(null, printer).generate("spaceid", "test", ".", "invalid-access-token");
+    } catch (RuntimeException e) {
+      Mockito.verify(printer).print("Failed to fetch content types, reason: java.io.IOException: " +
+          "FAILED REQUEST: Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
+          "content_types, tag=Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
+          "content_types, tag=null}}\n" +
+          "\t… Response{protocol=http/1.1, code=401, message=Unauthorized, " +
+          "url=https://api.contentful.com/spaces/spaceid/content_types}");
+      throw(e);
+    }
   }
 
   @Test(expected = GeneratorException.class)

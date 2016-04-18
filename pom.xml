@@ -52,10 +52,10 @@
     <commons-cli.version>1.2</commons-cli.version>
     <commons-io.version>2.4</commons-io.version>
     <javapoet.version>1.1.0</javapoet.version>
-    <cda.version>2.0.4</cda.version>
-    <cma.version>0.9.7</cma.version>
+    <cda.version>7.0.0</cda.version>
+    <cma.version>1.0.1</cma.version>
     <guava.version>18.0</guava.version>
-    <vault.version>0.9.3</vault.version>
+    <vault.version>2.0.0</vault.version>
 
     <!-- Test Dependencies -->
     <junit.version>4.11</junit.version>

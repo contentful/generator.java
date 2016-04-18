@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.lang.model.element.Modifier;
-import retrofit.RetrofitError;
 
 public class Generator {
   final FileHandler fileHandler;
@@ -90,9 +89,9 @@ public class Generator {
 
         fileHandler.write(javaFile, path);
       }
-    } catch (RetrofitError e) {
-      printer.print("Failed to fetch content types, reason: " + e.getMessage());
     } catch (Exception e) {
+      printer.print("Failed to fetch content types, reason: " + e.getMessage());
+
       // Clean up any generated files
       String generatedPath = Joiner.on(File.separatorChar).join(
           path,
