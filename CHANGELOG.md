@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [1.0.1][unreleased] - (in development)
+## Version [1.1.1][unreleased] - (in development)
 - TBD
+
+## Version [1.1.0] - 2016-06-21
+- Fixed: Do not generate omitted fields
 
 ## Version [1.0.0] - 2016-04-18
 - Changed: CDA 2.0.4 - 7.0.0
