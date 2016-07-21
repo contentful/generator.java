@@ -11,6 +11,12 @@ public class BaseFields extends Resource {
   String text;
 
   @Field
+  String notDisabledField;
+
+  @Field
+  String notOmittedField;
+
+  @Field
   String symbol;
 
   @Field
@@ -33,6 +39,14 @@ public class BaseFields extends Resource {
 
   public String text() {
     return text;
+  }
+
+  public String notDisabledField() {
+    return notDisabledField;
+  }
+
+  public String notOmittedField() {
+    return notOmittedField;
   }
 
   public String symbol() {

@@ -17,20 +17,20 @@
 package com.contentful.generator;
 
 import com.contentful.generator.lib.TestUtils;
-import com.contentful.java.cma.Constants;
 import com.contentful.java.cma.Constants.CMAFieldType;
 import com.contentful.java.cma.model.CMAContentType;
 import com.contentful.java.cma.model.CMAField;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.squareup.javapoet.JavaFile;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -79,7 +79,7 @@ public class GeneratorTests extends BaseTest {
     try {
       CMAField field = new CMAField().setId("fid").setType(CMAFieldType.Array);
 
-      field.setArrayItems(new HashMap(){{
+      field.setArrayItems(new HashMap() {{
         put("type", "Link");
         put("linkType", "Entry");
       }});
@@ -87,7 +87,7 @@ public class GeneratorTests extends BaseTest {
       new Generator().createFieldSpec(field, "test", "name", "ctid");
     } catch (GeneratorException e) {
       assertEquals("Field \"fid\" for content type \"ctid\" is missing link validation, "
-              + "must have content type validation.", e.getMessage());
+          + "must have content type validation.", e.getMessage());
       throw e;
     }
   }
@@ -156,10 +156,10 @@ public class GeneratorTests extends BaseTest {
     } catch (RuntimeException e) {
       Mockito.verify(printer).print("Failed to fetch content types, reason: java.io.IOException: " +
           "FAILED REQUEST: Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
-          "content_types, tag=Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
-          "content_types, tag=null}}\n" +
+          "content_types?limit=100, tag=Request{method=GET, url=https://api.contentful.com/spaces/" +
+          "spaceid/content_types?limit=100, tag=null}}\n" +
           "\t… Response{protocol=http/1.1, code=401, message=Unauthorized, " +
-          "url=https://api.contentful.com/spaces/spaceid/content_types}");
+          "url=https://api.contentful.com/spaces/spaceid/content_types?limit=100}");
       throw(e);
     }
   }

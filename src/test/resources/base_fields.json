@@ -13,6 +13,31 @@
       "disabled": true
     },
     {
+      "name": "notDisabledField",
+      "id": "notDisabledField",
+      "type": "Text",
+      "disabled": false
+    },
+    {
+      "name": "omittedField",
+      "id": "omittedField",
+      "type": "Text",
+      "omitted": true
+    },
+    {
+      "name": "disabledAndOmittedField",
+      "id": "disabledAndOmittedField",
+      "type": "Text",
+      "disabled": true,
+      "omitted": true
+    },
+    {
+      "name": "notOmittedField",
+      "id": "notOmittedField",
+      "type": "Text",
+      "omitted": false
+    },
+    {
       "name": "symbol",
       "id": "symbol",
       "type": "Symbol"
