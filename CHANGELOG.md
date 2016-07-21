@@ -25,7 +25,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 0.9.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/generator.java/compare/generator-0.9.3...HEAD
+[unreleased]: https://github.com/contentful/generator.java/compare/generator-1.1.0...HEAD
+[1.1.0]: https://github.com/contentful/generator.java/compare/generator-1.0.0...generator-1.1.0
 [1.0.0]: https://github.com/contentful/generator.java/compare/generator-0.9.3...generator-1.0.0
 [0.9.3]: https://github.com/contentful/generator.java/compare/generator-0.9.2...generator-0.9.3
 [0.9.2]: https://github.com/contentful/generator.java/compare/generator-0.9.1...generator-0.9.2

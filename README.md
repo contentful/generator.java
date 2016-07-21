@@ -18,12 +18,12 @@ Download [the latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>com.contentful.generator</groupId>
   <artifactId>generator</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.generator:generator:1.0.0'
+compile 'com.contentful.generator:generator:1.1.0'
 ```
 
 Usage
@@ -48,7 +48,7 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE][4] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: http://search.maven.org/remotecontent?filepath=com/contentful/generator/generator/1.0.0/generator-1.0.0-jar-with-dependencies.jar
+ [2]: http://search.maven.org/remotecontent?filepath=com/contentful/generator/generator/1.1.0/generator-1.1.0-jar-with-dependencies.jar
  [3]: https://contentful.github.io/generator.java/javadoc
  [4]: https://raw.githubusercontent.com/contentful/contentful-management.java/master/LICENSE.txt
  
