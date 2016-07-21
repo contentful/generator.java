@@ -144,7 +144,7 @@ public class Generator {
         .addAnnotation(annotateModel(contentType));
 
     for (CMAField field : contentType.getFields()) {
-      if (field.isDisabled()) {
+      if (field.isDisabled() || field.isOmitted()) {
         continue;
       }
 
