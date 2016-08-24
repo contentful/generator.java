@@ -49,6 +49,6 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE][4] for further details.
 
  [1]: https://www.contentful.com
  [2]: http://search.maven.org/remotecontent?filepath=com/contentful/generator/generator/1.1.0/generator-1.1.0-jar-with-dependencies.jar
- [3]: https://contentful.github.io/generator.java/javadoc
+ [3]: https://www.contentful.com/developers/docs/android/tutorials/offline-persistence-with-vault/#generatorjava
  [4]: https://raw.githubusercontent.com/contentful/contentful-management.java/master/LICENSE.txt
  
