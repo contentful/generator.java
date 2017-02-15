@@ -154,13 +154,13 @@ public class GeneratorTests extends BaseTest {
     try {
       new Generator(null, printer).generate("spaceid", "test", ".", "invalid-access-token");
     } catch (RuntimeException e) {
-      Mockito.verify(printer).print("Failed to fetch content types, reason: java.io.IOException: " +
-          "FAILED REQUEST: Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
-          "content_types?limit=100, tag=Request{method=GET, url=https://api.contentful.com/spaces/" +
-          "spaceid/content_types?limit=100, tag=null}}\n" +
-          "\t… Response{protocol=http/1.1, code=401, message=Unauthorized, " +
-          "url=https://api.contentful.com/spaces/spaceid/content_types?limit=100}");
-      throw(e);
+      Mockito.verify(printer).print("Failed to fetch content types, reason: java.io.IOException:" +
+          " FAILED REQUEST: Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
+          "content_types?limit=100, tag=Request{method=GET, url=https://api.contentful.com/" +
+          "spaces/spaceid/content_types?limit=100, tag=null}}\n\t… Response{protocol=http/1.1, " +
+          "code=503, message=Service Temporarily Unavailable, url=https://api.contentful.com/" +
+          "spaces/spaceid/content_types?limit=100}");
+      throw (e);
     }
   }
 
