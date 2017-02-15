@@ -1,6 +1,7 @@
 # generator.java
 
 [![Build Status](https://travis-ci.org/contentful/generator.java.svg)](https://travis-ci.org/contentful/generator.java/builds#)
+[![codecov](https://codecov.io/gh/mariobodemann/generator.java/branch/master/graph/badge.svg)](https://codecov.io/gh/mariobodemann/generator.java)
 
 Code generator for Contentful models.
 
