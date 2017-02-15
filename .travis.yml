@@ -5,6 +5,8 @@ jdk:
   - oraclejdk8
 
 after_success:
+  - mvn cobertura:cobertura
+  - .buildscript/codecov.sh
   - .buildscript/deploy_snapshot.sh
 
 env:
