@@ -44,7 +44,7 @@ The tool can also be used directly from code, refer to the [documentation][3] fo
 License
 =======
 
-Copyright (c) 2015 Contentful GmbH. See [LICENSE][4] for further details.
+Copyright (c) 2017 Contentful GmbH. See [LICENSE][4] for further details.
 
 
  [1]: https://www.contentful.com
