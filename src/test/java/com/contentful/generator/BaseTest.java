@@ -18,11 +18,14 @@ package com.contentful.generator;
 
 import com.contentful.generator.lib.TestUtils;
 import com.contentful.java.cma.CMAClient;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
+
+import java.io.IOException;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 public class BaseTest {
   MockWebServer server;
@@ -34,7 +37,7 @@ public class BaseTest {
 
     client = new CMAClient.Builder()
         .setAccessToken("supersecret")
-        .setEndpoint(server.getUrl("/").toString())
+        .setCoreEndpoint(server.url("/").toString())
         .build();
   }
 

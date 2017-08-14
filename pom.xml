@@ -53,18 +53,20 @@
 
         <!-- Dependencies -->
         <commons-cli.version>1.2</commons-cli.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.5</commons-io.version>
         <javapoet.version>1.1.0</javapoet.version>
-        <cda.version>7.0.0</cda.version>
-        <cma.version>1.2.0</cma.version>
-        <guava.version>18.0</guava.version>
-        <vault.version>2.0.0</vault.version>
+        <cda.version>8.0.0</cda.version>
+        <cma.version>2.1.0</cma.version>
+        <guava.version>23.0</guava.version>
+        <vault.version>3.0.0</vault.version>
+        <retrofit.version>2.3.0</retrofit.version>
 
         <!-- Test Dependencies -->
-        <junit.version>4.11</junit.version>
-        <mockito.version>2.0.2-beta</mockito.version>
-        <truth.version>0.25</truth.version>
-        <okhttp.version>2.4.0</okhttp.version>
+        <junit.version>4.12</junit.version>
+        <mockito.version>2.8.47</mockito.version>
+        <okhttp.version>3.8.1</okhttp.version>
+        <truth.version>0.34</truth.version>
+
     </properties>
 
     <dependencies>
@@ -113,7 +115,7 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
@@ -126,21 +128,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.okhttp</groupId>
+            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
             <version>${okhttp.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.okhttp</groupId>
+            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>${okhttp.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.okhttp</groupId>
+            <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp-urlconnection</artifactId>
             <version>${okhttp.version}</version>
             <scope>test</scope>
@@ -151,6 +153,24 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>${retrofit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>adapter-rxjava2</artifactId>
+            <version>${retrofit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+            <version>${retrofit.version}</version>
         </dependency>
     </dependencies>
 
