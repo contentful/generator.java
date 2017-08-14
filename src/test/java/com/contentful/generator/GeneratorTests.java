@@ -34,6 +34,8 @@ import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.startsWith;
 
 public class GeneratorTests extends BaseTest {
   @Test public void testBaseFields() throws Exception {
@@ -133,7 +135,7 @@ public class GeneratorTests extends BaseTest {
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
     new Generator(fileHandler, null).generate("spaceid", "test", ".", client);
 
-    Mockito.verify(fileHandler, Mockito.times(1)).write(Mockito.any(JavaFile.class), Mockito.anyString());
+    Mockito.verify(fileHandler, Mockito.times(1)).write(Mockito.any(JavaFile.class), anyString());
     Mockito.verify(fileHandler, Mockito.times(0)).delete(Mockito.any(File.class));
   }
 
@@ -143,7 +145,7 @@ public class GeneratorTests extends BaseTest {
     Generator.Printer printer = Mockito.mock(Generator.Printer.class);
     new Generator(fileHandler, printer).generate("spaceid", "test", ".", client);
 
-    Mockito.verify(fileHandler, Mockito.times(1)).write(Mockito.any(JavaFile.class), Mockito.anyString());
+    Mockito.verify(fileHandler, Mockito.times(1)).write(Mockito.any(JavaFile.class), anyString());
     Mockito.verify(fileHandler, Mockito.times(0)).delete(Mockito.any(File.class));
     Mockito.verify(printer).print("WARNING: Ignoring Content Type (id=\"ctid\"), has no name.");
   }
@@ -154,12 +156,13 @@ public class GeneratorTests extends BaseTest {
     try {
       new Generator(null, printer).generate("spaceid", "test", ".", "invalid-access-token");
     } catch (RuntimeException e) {
-      Mockito.verify(printer).print("Failed to fetch content types, reason: java.io.IOException:" +
-          " FAILED REQUEST: Request{method=GET, url=https://api.contentful.com/spaces/spaceid/" +
-          "content_types?limit=100, tag=Request{method=GET, url=https://api.contentful.com/" +
-          "spaces/spaceid/content_types?limit=100, tag=null}}\n\t… Response{protocol=http/1.1, " +
-          "code=503, message=Service Temporarily Unavailable, url=https://api.contentful.com/" +
-          "spaces/spaceid/content_types?limit=100}");
+      Mockito
+          .verify(printer)
+          .print(
+              startsWith(
+                  "Failed to fetch content types, reason: FAILED REQUEST:"
+              )
+          );
       throw (e);
     }
   }
@@ -176,7 +179,7 @@ public class GeneratorTests extends BaseTest {
           "java.lang.IllegalArgumentException: not a valid name: boolean");
 
       Mockito.verify(fileHandler, Mockito.times(1)).write(
-          Mockito.any(JavaFile.class), Mockito.anyString());
+          Mockito.any(JavaFile.class), anyString());
 
       Mockito.verify(fileHandler, Mockito.times(1)).delete(Mockito.any(File.class));
 
@@ -192,6 +195,7 @@ public class GeneratorTests extends BaseTest {
     generator.models.put("linked-id", "LinkedResource");
 
     String generatedSource = generator.generateModel("test", contentType, className).toString();
-    assertThat(generatedSource).isEqualTo(TestUtils.readTestResource(className + ".java"));
+    final String expected = TestUtils.readTestResource(className + ".java");
+    assertThat(generatedSource).isEqualTo(expected);
   }
 }

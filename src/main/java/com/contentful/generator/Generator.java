@@ -33,11 +33,13 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.lang.model.element.Modifier;
 
 public class Generator {
@@ -59,9 +61,9 @@ public class Generator {
    * Fetch content types from the given space and generate corresponding model classes.
    *
    * @param spaceId space id
-   * @param pkg package name for generated classes
-   * @param path package source root
-   * @param client management api client instance
+   * @param pkg     package name for generated classes
+   * @param path    package source root
+   * @param client  management api client instance
    */
   public void generate(String spaceId, String pkg, String path, CMAClient client) {
     try {
@@ -71,7 +73,7 @@ public class Generator {
         String name = contentType.getName();
         if (name != null) {
           String className = normalize(name, CaseFormat.UPPER_CAMEL);
-          models.put(contentType.getResourceId(), className);
+          models.put(contentType.getId(), className);
         }
       }
 
@@ -79,18 +81,18 @@ public class Generator {
         String name = contentType.getName();
         if (name == null || name.isEmpty()) {
           printer.print("WARNING: Ignoring Content Type (id="
-              + "\"" + contentType.getResourceId() + "\""
+              + "\"" + contentType.getId() + "\""
               + "), has no name.");
           continue;
         }
 
         JavaFile javaFile = generateModel(pkg, contentType,
-            models.get(contentType.getResourceId()));
+            models.get(contentType.getId()));
 
         fileHandler.write(javaFile, path);
       }
     } catch (Exception e) {
-      printer.print("Failed to fetch content types, reason: " + e.getMessage());
+      printer.print("Failed to fetch content types, reason: " + e.toString());
 
       // Clean up any generated files
       String generatedPath = Joiner.on(File.separatorChar).join(
@@ -110,12 +112,13 @@ public class Generator {
    * per the given {@code token}.
    *
    * @param spaceId space id
-   * @param pkg package name for generated classes
-   * @param path package source root
-   * @param token management api access token
+   * @param pkg     package name for generated classes
+   * @param path    package source root
+   * @param token   management api access token
    */
   public void generate(String spaceId, String pkg, String path, String token) {
     CMAClient client = new CMAClient.Builder()
+        .setApplication("Generator.java", "1.1.0")
         .setAccessToken(token)
         .build();
 
@@ -124,7 +127,7 @@ public class Generator {
 
   AnnotationSpec annotateModel(CMAContentType contentType) {
     return AnnotationSpec.builder(ContentType.class)
-        .addMember("value", "$S", contentType.getSys().get("id"))
+        .addMember("value", "$S", contentType.getId())
         .build();
   }
 
@@ -149,7 +152,7 @@ public class Generator {
       }
 
       String fieldName = normalize(field.getId(), CaseFormat.LOWER_CAMEL);
-      FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName, contentType.getResourceId());
+      FieldSpec fieldSpec = createFieldSpec(field, pkg, fieldName, contentType.getId());
 
       builder.addField(fieldSpec)
           .addMethod(fieldGetter(fieldSpec));
@@ -159,7 +162,7 @@ public class Generator {
   }
 
   FieldSpec createArrayFieldSpec(CMAField field, String pkg, String fieldName,
-      String parentContentTypeId) {
+                                 String parentContentTypeId) {
     Map arrayItems = field.getArrayItems();
     String fieldId = field.getId();
     if ("Link".equals(arrayItems.get("type"))) {
@@ -195,7 +198,7 @@ public class Generator {
   }
 
   FieldSpec createFieldSpec(CMAField field, String pkg, String fieldName,
-      String parentContentTypeId) {
+                            String parentContentTypeId) {
     Constants.CMAFieldType fieldType = field.getType();
     String fieldId = field.getId();
     switch (fieldType) {
@@ -209,7 +212,7 @@ public class Generator {
   }
 
   FieldSpec createLinkFieldSpec(String linkType, List<Map> validations, String pkg,
-      String fieldName, String fieldId, String parentContentTypeId) {
+                                String fieldName, String fieldId, String parentContentTypeId) {
     ClassName className = null;
 
     if ("Asset".equals(linkType)) {
@@ -302,6 +305,7 @@ public class Generator {
 
   interface FileHandler {
     void write(JavaFile javaFile, String path) throws IOException;
+
     boolean delete(File file);
   }
 
