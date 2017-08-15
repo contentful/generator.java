@@ -39,10 +39,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.lang.model.element.Modifier;
 
 public class Generator {
+  static final String PROPERTIES_KEY_VERSION_NAME = "version.name";
+  static final String PROPERTIES = "generator.properties";
+
   final FileHandler fileHandler;
   final Printer printer;
   final Map<String, String> models;
@@ -118,11 +122,22 @@ public class Generator {
    */
   public void generate(String spaceId, String pkg, String path, String token) {
     CMAClient client = new CMAClient.Builder()
-        .setApplication("Generator.java", "1.1.0")
+        .setApplication("Generator.java", getVersion())
         .setAccessToken(token)
         .build();
 
     generate(spaceId, pkg, path, client);
+  }
+
+  private static String getVersion() {
+    Properties properties = new Properties();
+    try {
+      properties.load(Generator.class.getClassLoader().getResourceAsStream(
+          PROPERTIES));
+    } catch (IOException e) {
+      return "0.0";
+    }
+    return properties.getProperty(PROPERTIES_KEY_VERSION_NAME);
   }
 
   AnnotationSpec annotateModel(CMAContentType contentType) {
