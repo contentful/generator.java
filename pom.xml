@@ -58,7 +58,7 @@
         <cda.version>8.0.0</cda.version>
         <cma.version>2.1.0</cma.version>
         <guava.version>23.0</guava.version>
-        <vault.version>3.0.0</vault.version>
+        <vault.version>3.0.1</vault.version>
         <retrofit.version>2.3.0</retrofit.version>
 
         <!-- Test Dependencies -->
