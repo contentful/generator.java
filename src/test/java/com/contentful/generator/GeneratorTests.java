@@ -16,6 +16,7 @@
 
 package com.contentful.generator;
 
+import com.contentful.generator.build.GeneratedBuildParameters;
 import com.contentful.generator.lib.TestUtils;
 import com.contentful.java.cma.Constants.CMAFieldType;
 import com.contentful.java.cma.model.CMAContentType;
@@ -185,6 +186,12 @@ public class GeneratorTests extends BaseTest {
 
       throw e;
     }
+  }
+
+  @Test
+  public void testFilteredVersionOfSDKIsFiltered() {
+    final String version = GeneratedBuildParameters.PROJECT_VERSION;
+    assertThat(version).doesNotContain("project");
   }
 
   void generateAndAssert(String responseFileName, String className) throws Exception {
