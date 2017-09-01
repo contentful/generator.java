@@ -16,6 +16,7 @@
 
 package com.contentful.generator;
 
+import com.contentful.generator.build.GeneratedBuildParameters;
 import com.contentful.generator.lib.TestUtils;
 import com.contentful.java.cma.Constants.CMAFieldType;
 import com.contentful.java.cma.model.CMAContentType;
@@ -173,7 +174,7 @@ public class GeneratorTests extends BaseTest {
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
 
     try {
-      new Generator(fileHandler, null).generate("spaceid", "test", ".", client);
+      new Generator(fileHandler, Generator.NO_PRINTER).generate("spaceid", "test", ".", client);
     } catch (GeneratorException e) {
       assertThat(e.getMessage()).isEqualTo(
           "java.lang.IllegalArgumentException: not a valid name: boolean");
@@ -185,6 +186,12 @@ public class GeneratorTests extends BaseTest {
 
       throw e;
     }
+  }
+
+  @Test
+  public void testFilteredVersionOfSDKIsFiltered() {
+    final String version = GeneratedBuildParameters.PROJECT_VERSION;
+    assertThat(version).doesNotContain("project");
   }
 
   void generateAndAssert(String responseFileName, String className) throws Exception {
