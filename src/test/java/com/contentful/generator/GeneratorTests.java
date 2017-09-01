@@ -174,7 +174,7 @@ public class GeneratorTests extends BaseTest {
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
 
     try {
-      new Generator(fileHandler, null).generate("spaceid", "test", ".", client);
+      new Generator(fileHandler, Generator.NO_PRINTER).generate("spaceid", "test", ".", client);
     } catch (GeneratorException e) {
       assertThat(e.getMessage()).isEqualTo(
           "java.lang.IllegalArgumentException: not a valid name: boolean");

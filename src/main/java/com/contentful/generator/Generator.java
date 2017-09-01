@@ -329,4 +329,9 @@ public class Generator {
       System.out.println(text);
     }
   }
+
+  public static final Printer NO_PRINTER = new Printer() {
+    @Override public void print(String text) {
+    }
+  };
 }

@@ -23,6 +23,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import java.io.IOException;
+import java.util.logging.LogManager;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -34,6 +35,8 @@ public class BaseTest {
   @Before public void setUp() throws Exception {
     server = new MockWebServer();
     server.start();
+
+    LogManager.getLogManager().reset();
 
     client = new CMAClient.Builder()
         .setAccessToken("supersecret")
