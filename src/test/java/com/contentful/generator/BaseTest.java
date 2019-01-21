@@ -38,6 +38,8 @@ public class BaseTest {
     client = new CMAClient.Builder()
         .setAccessToken("supersecret")
         .setCoreEndpoint(server.url("/").toString())
+        .setSpaceId("nospace")
+        .setEnvironmentId("noenv")
         .build();
   }
 

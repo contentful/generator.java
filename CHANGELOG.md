@@ -2,8 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [1.2.1] - (unreleased)
-- To be anounced
+## Version [1.3.0] - 2019-01-21
+- Add environments
+- Update dependencies
+- Using Java 8.
 
 ## Version [1.2.0] - 2017-08-25
 - Changed: Dependency updates
@@ -31,6 +33,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Initial release.
 
 [unreleased]: https://github.com/contentful/generator.java/compare/generator-1.2.1...HEAD
+[1.2.1]: https://github.com/contentful/generator.java/compare/generator-1.2.0...generator-1.2.1
 [1.2.0]: https://github.com/contentful/generator.java/compare/generator-1.1.0...generator-1.2.0
 [1.1.0]: https://github.com/contentful/generator.java/compare/generator-1.0.0...generator-1.1.0
 [1.0.0]: https://github.com/contentful/generator.java/compare/generator-0.9.3...generator-1.0.0

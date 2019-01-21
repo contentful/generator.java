@@ -4,7 +4,7 @@
 
     <groupId>com.contentful.generator</groupId>
     <artifactId>generator</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -47,23 +47,23 @@
         <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
 
         <!-- Compilation -->
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
 
         <!-- Dependencies -->
-        <commons-cli.version>1.2</commons-cli.version>
-        <commons-io.version>2.5</commons-io.version>
-        <javapoet.version>1.1.0</javapoet.version>
-        <cda.version>8.0.0</cda.version>
-        <cma.version>2.1.0</cma.version>
-        <guava.version>23.0</guava.version>
-        <vault.version>3.0.1</vault.version>
-        <retrofit.version>2.3.0</retrofit.version>
+        <commons-cli.version>1.4</commons-cli.version>
+        <commons-io.version>2.6</commons-io.version>
+        <javapoet.version>1.11.1</javapoet.version>
+        <cda.version>10.2.1</cda.version>
+        <cma.version>3.2.3</cma.version>
+        <guava.version>27.0.1-jre</guava.version>
+        <vault.version>3.2.1</vault.version>
+        <retrofit.version>2.5.0</retrofit.version>
 
         <!-- Test Dependencies -->
         <junit.version>4.12</junit.version>
-        <mockito.version>2.8.47</mockito.version>
-        <okhttp.version>3.8.1</okhttp.version>
-        <truth.version>0.34</truth.version>
+        <mockito.version>2.23.4</mockito.version>
+        <okhttp.version>3.12.1</okhttp.version>
+        <truth.version>0.42</truth.version>
 
     </properties>
 

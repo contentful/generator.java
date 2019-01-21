@@ -81,7 +81,7 @@ public class GeneratorTests extends BaseTest {
     try {
       CMAField field = new CMAField().setId("fid").setType(CMAFieldType.Array);
 
-      field.setArrayItems(new HashMap() {{
+      field.setArrayItems(new HashMap<String, Object>() {{
         put("type", "Link");
         put("linkType", "Entry");
       }});
@@ -95,7 +95,7 @@ public class GeneratorTests extends BaseTest {
   }
 
   @Test public void testExtractContentType() throws Exception {
-    ArrayList<Map> validations = Lists.newArrayList();
+    ArrayList<Map<String, Object>> validations = Lists.newArrayList();
     ArrayList<String> contentTypes = Lists.newArrayList("a");
     validations.add(ImmutableMap.of("linkContentType", contentTypes));
     String result = Generator.extractSingleLinkContentType(validations);
@@ -103,7 +103,7 @@ public class GeneratorTests extends BaseTest {
   }
 
   @Test public void testExtractContentTypeIsNullForMultipleTypes() throws Exception {
-    ArrayList<Map> validations = Lists.newArrayList();
+    ArrayList<Map<String, Object>> validations = Lists.newArrayList();
     ArrayList<String> contentTypes = Lists.newArrayList("a", "b");
     validations.add(ImmutableMap.of("linkContentType", contentTypes));
     String result = Generator.extractSingleLinkContentType(validations);
@@ -112,7 +112,7 @@ public class GeneratorTests extends BaseTest {
 
   @Test public void testExtractContentTypeIsNullForMultipleValidations()
       throws Exception {
-    ArrayList<Map> validations = Lists.newArrayList();
+    ArrayList<Map<String, Object>> validations = Lists.newArrayList();
     ArrayList<String> contentTypes = Lists.newArrayList("a");
     validations.add(ImmutableMap.of("linkContentType", contentTypes));
     validations.add(ImmutableMap.of("linkContentType", contentTypes));
@@ -133,7 +133,7 @@ public class GeneratorTests extends BaseTest {
   @Test public void testGenerate() throws Exception {
     server.enqueue(newSuccessResponse("all_content_types.json"));
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
-    new Generator(fileHandler, null).generate("spaceid", "test", ".", client);
+    new Generator(fileHandler, null).generate("test", ".", client);
 
     Mockito.verify(fileHandler, Mockito.times(1)).write(Mockito.any(JavaFile.class), anyString());
     Mockito.verify(fileHandler, Mockito.times(0)).delete(Mockito.any(File.class));
@@ -143,7 +143,7 @@ public class GeneratorTests extends BaseTest {
     server.enqueue(newSuccessResponse("all_content_types_no_name.json"));
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
     Generator.Printer printer = Mockito.mock(Generator.Printer.class);
-    new Generator(fileHandler, printer).generate("spaceid", "test", ".", client);
+    new Generator(fileHandler, printer).generate("test", ".", client);
 
     Mockito.verify(fileHandler, Mockito.times(1)).write(Mockito.any(JavaFile.class), anyString());
     Mockito.verify(fileHandler, Mockito.times(0)).delete(Mockito.any(File.class));
@@ -154,13 +154,13 @@ public class GeneratorTests extends BaseTest {
   public void testGenerateWrapsNetworkError() throws Exception {
     Generator.Printer printer = Mockito.mock(Generator.Printer.class);
     try {
-      new Generator(null, printer).generate("spaceid", "test", ".", "invalid-access-token");
+      new Generator(null, printer).generate("spaceid", "environmentid", "test", ".", "invalid-access-token");
     } catch (RuntimeException e) {
       Mockito
           .verify(printer)
           .print(
               startsWith(
-                  "Failed to fetch content types, reason: FAILED REQUEST:"
+                  "Failed to fetch content types, reason: FAILED ErrorBody { details = Details { type = Space }"
               )
           );
       throw (e);
@@ -173,7 +173,7 @@ public class GeneratorTests extends BaseTest {
     Generator.FileHandler fileHandler = Mockito.mock(Generator.FileHandler.class);
 
     try {
-      new Generator(fileHandler, null).generate("spaceid", "test", ".", client);
+      new Generator(fileHandler, null).generate("test", ".", client);
     } catch (GeneratorException e) {
       assertThat(e.getMessage()).isEqualTo(
           "java.lang.IllegalArgumentException: not a valid name: boolean");
@@ -189,7 +189,7 @@ public class GeneratorTests extends BaseTest {
 
   void generateAndAssert(String responseFileName, String className) throws Exception {
     server.enqueue(newSuccessResponse(responseFileName));
-    CMAContentType contentType = client.contentTypes().fetchOne("sid", "ctid");
+    CMAContentType contentType = client.contentTypes().fetchOne("ctid");
 
     Generator generator = new Generator();
     generator.models.put("linked-id", "LinkedResource");

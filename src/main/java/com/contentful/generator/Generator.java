@@ -64,14 +64,13 @@ public class Generator {
   /**
    * Fetch content types from the given space and generate corresponding model classes.
    *
-   * @param spaceId space id
-   * @param pkg     package name for generated classes
-   * @param path    package source root
-   * @param client  management api client instance
+   * @param pkg    package name for generated classes
+   * @param path   package source root
+   * @param client management api client instance
    */
-  public void generate(String spaceId, String pkg, String path, CMAClient client) {
+  public void generate(String pkg, String path, CMAClient client) {
     try {
-      CMAArray<CMAContentType> contentTypes = client.contentTypes().fetchAll(spaceId);
+      CMAArray<CMAContentType> contentTypes = client.contentTypes().fetchAll();
 
       for (CMAContentType contentType : contentTypes.getItems()) {
         String name = contentType.getName();
@@ -120,13 +119,15 @@ public class Generator {
    * @param path    package source root
    * @param token   management api access token
    */
-  public void generate(String spaceId, String pkg, String path, String token) {
+  public void generate(String spaceId, String environmentId, String pkg, String path, String token) {
     CMAClient client = new CMAClient.Builder()
         .setApplication("Generator.java", getVersion())
         .setAccessToken(token)
+        .setSpaceId(spaceId)
+        .setEnvironmentId(environmentId)
         .build();
 
-    generate(spaceId, pkg, path, client);
+    generate(pkg, path, client);
   }
 
   private static String getVersion() {
@@ -188,7 +189,7 @@ public class Generator {
       } else if ("Entry".equals(linkType)) {
         //noinspection unchecked
         String linkContentType = extractSingleLinkContentType(
-            (List<Map>) arrayItems.get("validations"));
+            (List<Map<String, Object>>) arrayItems.get("validations"));
 
         if (linkContentType == null) {
           throwLinkNoContentType(parentContentTypeId, fieldId);
@@ -226,7 +227,7 @@ public class Generator {
     return fieldBuilder(ClassName.get(classForFieldType(fieldType)), fieldName, fieldId).build();
   }
 
-  FieldSpec createLinkFieldSpec(String linkType, List<Map> validations, String pkg,
+  FieldSpec createLinkFieldSpec(String linkType, List<Map<String, Object>> validations, String pkg,
                                 String fieldName, String fieldId, String parentContentTypeId) {
     ClassName className = null;
 
@@ -260,7 +261,7 @@ public class Generator {
     return ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(pkg, className));
   }
 
-  static String extractSingleLinkContentType(List<Map> validations) {
+  static String extractSingleLinkContentType(List<Map<String, Object>> validations) {
     String result = null;
     if (validations != null) {
       for (Map v : validations) {

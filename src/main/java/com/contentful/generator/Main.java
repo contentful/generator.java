@@ -30,6 +30,8 @@ public class Main {
     try {
       CommandLine line = parser.parse(options, args);
 
+      final String environment = line.hasOption("environment") ? line.getOptionValue("environment") : "master";
+
       if (line.hasOption("space")
           && line.hasOption("package")
           && line.hasOption("folder")
@@ -37,6 +39,7 @@ public class Main {
 
         new Generator().generate(
             line.getOptionValue("space"),
+            environment,
             line.getOptionValue("package"),
             line.getOptionValue("folder"),
             line.getOptionValue("token"));
@@ -51,6 +54,7 @@ public class Main {
   public static Options constructOptions() {
     return new Options()
         .addOption("s", "space", true, "Space ID")
+        .addOption("e", "environment", true, "Environment ID, 'master' if not set.")
         .addOption("t", "token", true, "Management API Access Token")
         .addOption("p", "package", true, "Destination package name")
         .addOption("f", "folder", true, "Destination folder path");
