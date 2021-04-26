@@ -51,7 +51,7 @@
 
         <!-- Dependencies -->
         <commons-cli.version>1.4</commons-cli.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <javapoet.version>1.11.1</javapoet.version>
         <cda.version>10.2.1</cda.version>
         <cma.version>3.2.3</cma.version>
