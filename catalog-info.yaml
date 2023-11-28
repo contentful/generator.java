@@ -1,0 +1,14 @@
+# Backstage documentation
+# https://backstage.io/docs/features/software-catalog/descriptor-format/
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: generator.java 
+  description: Code generator for Contentful models.
+  annotations:
+    github.com/project-slug: contentful/generator.java 
+    contentful.com/service-tier: "unknown" #1, 2, 3, 4
+spec:
+  type: library 
+  lifecycle: unknown  
+  owner: group:team-developer-experience
